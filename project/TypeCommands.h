@@ -40,116 +40,78 @@
 #define ERROR_GET_MESSAGE_THROW "getSuccessMessageGet"
 #define ERROR_GET_CHANNEL_NUMBER_UNKNOWN "ch_unknown"
 
-class TypeCommands
-{
-protected:
-    oscilloscopes::Oscilloscope *_oscilloscope;
-    
-    std::vector<std::string> _param;
-    size_t _startXOR;
+namespace server {
 
-    const std::string _PREFIX;
-    const std::string _COMMAND;
+    namespace typecommands {
 
-    /** @brief clear - возможно не лучшее названии, нужен для очистки буфера, чтобы можно было много
-     *                 раз использовать
-     * */
-    void clear()
-    {
-        for( auto& it : _param )
-            it = "";
-        _startXOR = 0;
-    }
-
-    /** @brief parseContent - парсер \content на наличие параметров
-     *  @param content - вся строка с контентом
-     *  @param i - номер после =
-     *  @param end - колличество параметров, которые надо счить + 1
-     * */
-    void parseContent( const std::string& content, const size_t& i, const size_t& end )
-    {
-        clear();
-        for( size_t j = i, pi = 0; j < content.size(); ++j )
+        class TypeCommands
         {
-            if( ( content[j] == ',' ) || ( content[j] == ':' ) )
-                ++pi;
-            else
-                _param[pi] += content[j];
+        protected:
+            oscilloscopes::Oscilloscope *_oscilloscope;
+    
+            std::vector<std::string> _param;
+            size_t _startXOR;
 
-            if( pi == end )
-            {
-                _startXOR = ( j + 1 );
-                break;
-            }
-        }
-    }
+            const std::string _PREFIX;
+            const std::string _COMMAND;
 
-    /** @brief - Метод для возвращения ошибки, если такая ситуация произошла
-     *  @param prm - параметр, если требуется
-     *  @param err - ошибка
-     * */
-    std::string getErrorMessage( const std::string& prm, const std::string& err )
-    {
-        return std::string( ( _PREFIX + ":" + _COMMAND + "=" + prm + ":error=" + err + ":xor=valXor;" ) );
-    }
+            /** @brief clear - возможно не лучшее названии, нужен для очистки буфера, чтобы можно было
+             *                 много раз использовать
+             * */
+            void clear();
 
-    std::string getErrorMessage()
-    {
-        return std::string( ( _PREFIX + ":" + _COMMAND + "=-98:error=NO_METHOD:xor=valXor;" ) );
-    }
+            /** @brief parseContent - парсер \content на наличие параметров
+             *  @param content - вся строка с контентом
+             *  @param i - номер после =
+             *  @param end - колличество параметров, которые надо счить + 1
+             * */
+            void parseContent( const std::string& content, const size_t& i, const size_t& end );
 
-    std::string getErrorUnknownMessage()
-    {
-        return std::string( ( _PREFIX + ":" + _COMMAND + "=-99:error=UNKHOWN_COMMAND:xor=valXor;" ) );
-    }
-    /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения, для size_t
-     *  @param prm - параметр, который надо вернуть
-     * */
-    std::string getSuccessMessage( const size_t& prm )
-    {
-        return std::string( ( _PREFIX + ":" + _COMMAND + "=" + std::to_string(prm) + ":xor=valXor;" ) );
-    }
+            /** @brief - Метод для возвращения ошибки, если такая ситуация произошла
+             *  @param prm - параметр, если требуется
+             *  @param err - ошибка
+             * */
+            std::string getErrorMessage( const std::string& prm, const std::string& err );
 
-    /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения, для std::vector<size_t>
-     *  @param prm - параметр, который надо вернуть
-     * */
-    std::string getSuccessMessage( const std::vector<size_t>& prm )
-    {
-        std::string message = ( _PREFIX + ":" + _COMMAND + "=" );
-        for( const auto& it : prm )  // На больших значениях очень плохо
-            message = ( message + std::to_string(it) + "," );
-        return ( message + ":xor=valXor;" );
-    }
+            std::string getErrorMessage();
 
-    /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения, для std::vector<uint16_t>
-     *  @param prm - параметр, который надо вернуть
-     * */
-    std::string getSuccessMessage( const std::vector<uint16_t>& prm )
-    {
-        std::string message = ( _PREFIX + ":" + _COMMAND + "=" );
-        for( const auto& it : prm )  // На больших значениях очень плохо
-            message = ( message + std::to_string(it) + "," );
-        return ( message + ":xor=valXor;" );
-    }
+            std::string getErrorUnknownMessage();
 
-    std::string getSuccessMessage()
-    {
-        return std::string( ( _PREFIX + ":" + _COMMAND + "=0:xor=valXor;" ) );
-    }
+            /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения, для size_t
+             *  @param prm - параметр, который надо вернуть
+             * */
+            std::string getSuccessMessage( const size_t& prm );
 
-    virtual std::string getRange() = 0;
-    virtual std::string getCurrent() = 0;
-    virtual std::string setValue() = 0;
+            /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения, для std::vector<size_t>
+             *  @param prm - параметр, который надо вернуть
+             * */
+            std::string getSuccessMessage( const std::vector<size_t>& prm );
 
-    virtual std::string getPulse() = 0;
-public:
-    /** @brief TypeCommands Конструктор инициализации, для уменьшения строчек кода в дальнейшем
-     * */
-    TypeCommands( oscilloscopes::Oscilloscope *osc, const std::string& prefix, const std::string& command,
-                  const ssize_t& size ) : _oscilloscope(osc), _param(size), _startXOR(0), _PREFIX(prefix),
-                  _COMMAND(command) {}
+            /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения, для std::vector<uint16_t>
+             *  @param prm - параметр, который надо вернуть
+             * */
+            std::string getSuccessMessage( const std::vector<uint16_t>& prm );
 
-    virtual std::string call( const std::string& content, const size_t& i ) = 0;
-};
+            std::string getSuccessMessage();
+
+            virtual std::string getRange() = 0;
+            virtual std::string getCurrent() = 0;
+            virtual std::string setValue() = 0;
+
+            virtual std::string getPulse() = 0;
+        
+        public:
+            /** @brief TypeCommands Конструктор инициализации, для уменьшения строчек кода в дальнейшем
+             * */
+            TypeCommands( oscilloscopes::Oscilloscope *osc, const std::string& prefix,
+                          const std::string& command, const ssize_t& size ) : _oscilloscope(osc),
+                          _param(size), _startXOR(0), _PREFIX(prefix), _COMMAND(command) {}
+
+            virtual std::string call( const std::string& content, const size_t& i ) = 0;
+        };
+
+    };  // typecommands
+
+};  // server
 
 #endif  // PROJECT_TYPE_COMMANDS_H_

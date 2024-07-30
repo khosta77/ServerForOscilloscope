@@ -13,9 +13,9 @@ namespace server
     private:
         const std::string _prefix;
 
-        TypeVCommands _tvc;
-        TypeSCommands _tsc;
-        TypePCommands _tpc;
+        typecommands::TypeVCommands _tvc;
+        typecommands::TypeSCommands _tsc;
+        typecommands::TypePCommands _tpc;
 
         std::string callCMD( const std::string& command, const std::string& content, const size_t& i );
         std::pair<bool, size_t> findPrefix( const std::string& content );
