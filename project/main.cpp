@@ -1,4 +1,4 @@
-#include "oscilloscope_plug.h"
+#include "../oscPlug/oscilloscope_plug.h"
 #include "Server.h"
 
 #define SERVER_ADRESS std::string("192.168.1.65")
