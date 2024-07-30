@@ -42,7 +42,7 @@ add_executable(
     main.out
     ./project/main.cpp
     ./project/CommandDecoder.cpp
-    ./project/oscilloscope_plug.cpp
+    ./oscPlug/oscilloscope_plug.cpp
     ./project/Server.cpp
     ./project/TypeCommands.cpp
     ./project/TypeVCommands.cpp
