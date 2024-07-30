@@ -20,7 +20,7 @@
 #include <sstream>
 #include <type_traits>
 
-#include "oscilloscope_plug.h"
+#include "oscilloscopes.h"
 
 #define ERROR_RANGE_UNKHOWN_PARAMETR "param"
 #define ERROR_RANGE_PROBLEM_GET      "-1"
