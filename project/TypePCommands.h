@@ -35,7 +35,7 @@ namespace server
              * */
             std::string setValue() override { return getErrorMessage(); }
 
-            std::vector<size_t> paramsToSizeT();
+            std::vector<int> paramsToSizeT();
 
             /** @brief getPulse - Метод считывания данных с канала, пример:
              *                    * osc:pget=[delay],[points],[channel]:xor=valXor;

@@ -1,16 +1,5 @@
 #include "TypePCommands.h"
 
-/** @brief stos - string to size_t
- *  @param str - string
- * */
-static size_t stos( const std::string& str )
-{
-    size_t tmp;
-    std::stringstream sstream(str);
-    sstream >> tmp;
-    return tmp;
-}
-
 std::string server::typecommands::TypePCommands::getRange()
 {
     std::vector<size_t> range;
@@ -22,28 +11,35 @@ std::string server::typecommands::TypePCommands::getRange()
     return getSuccessMessage(range);
 }
 
-std::vector<size_t> server::typecommands::TypePCommands::paramsToSizeT()
+std::vector<int> server::typecommands::TypePCommands::paramsToSizeT()
 {
-    return std::vector<size_t>{ stos(_param[0]), stos(_param[1]), stos(_param[2]) };
+    return std::vector<int>{ std::stoi(_param[0]), std::stoi(_param[1]), std::stoi(_param[2]) };
 }
 
 std::string server::typecommands::TypePCommands::getPulse()
 {
-    std::vector<size_t> newParams;
+    std::vector<int> newParams;
     try { newParams = paramsToSizeT(); }
     catch( const std::string& emsg ) { return getErrorMessage( ERROR_GET_DELAY_UNKNOWN, emsg ); };
 
-    if( newParams[2] >= _oscilloscope->getChannelsSize() )
+    if( newParams[2] > _oscilloscope->getChannelsSize() )
         return getErrorMessage( ERROR_GET_CHANNEL_NUMBER_UNKNOWN, "" );
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(newParams[0]));
+    if( newParams[0] <= -1 )
+        return getErrorMessage( "NO_TRIG", "NO_TRIG" );
+
+    if( newParams[0] > 0 )
+        std::this_thread::sleep_for(std::chrono::milliseconds(newParams[0]));
 
     oscilloscopes::OscSigframe osf;
     try { osf = _oscilloscope->getSignalFrame( newParams[1] ); }
     catch( const std::string& emsg ) { return getErrorMessage( ERROR_GET_PROBLEM_GET, emsg ); };
 
+    if( newParams[2] == 0 )
+        return getErrorMessage( ERROR_GET_CHANNEL_NUMBER_UNKNOWN, "" );  
+
     std::string returnMessage;
-    try { returnMessage = getSuccessMessage( osf[newParams[2]]._signal ); }
+    try { returnMessage = getSuccessMessage( osf[( newParams[2] - 1 )]._signal ); }
     catch( const std::string& emsg ) { return getErrorMessage( ERROR_GET_MESSAGE_THROW, emsg ); };
     return returnMessage;
 }

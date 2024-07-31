@@ -17,11 +17,14 @@ std::string server::typecommands::TypeVCommands::getCurrent()
     try { channel_number = std::stoi( _param[0] ); }
     catch( const std::string& emsg ) { return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN, emsg ); };
 
-    if( channel_number >= _oscilloscope->getChannelsSize() )
+    if( channel_number > _oscilloscope->getChannelsSize() )
         return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN, "" );
 
+    if( channel_number == 0 )
+        return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN, "IS_NULL" );
+
     size_t valueV = 0;
-    try { valueV = _oscilloscope->getInputLevel( channel_number ); }
+    try { valueV = _oscilloscope->getInputLevel( ( channel_number - 1 ) ); }
     catch( const std::string& emsg ) { return getErrorMessage( ERROR_CURRENT_PROBLEM_GET, emsg ); };
 
     return getSuccessMessage( valueV );
@@ -36,11 +39,14 @@ std::string server::typecommands::TypeVCommands::setValue()
     if( channel_number >= _oscilloscope->getChannelsSize() )
         return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN, "" );
 
+    if( channel_number == 0 )
+        return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN, "IS_NULL" );
+
     int new_v_value = 0;
     try { new_v_value = std::stoi( _param[1] ); }
     catch( const std::string& emsg ) { return getErrorMessage( ERROR_SET_UNKNOWN_NEW_LEVEL, emsg ); };
 
-    try { _oscilloscope->setInputLevel( channel_number, new_v_value ); }
+    try { _oscilloscope->setInputLevel( ( channel_number - 1 ), new_v_value ); }
     catch( const std::string& emsg ) { return getErrorMessage( ERROR_SET_PROBLEM_SET, emsg ); };
 
     return getSuccessMessage();
