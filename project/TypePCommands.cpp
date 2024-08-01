@@ -4,7 +4,7 @@ std::string server::typecommands::TypePCommands::getRange()
 {
     std::vector<size_t> range;
     try { range = _oscilloscope->getRangeSignalFrame(); }
-    catch( const std::string& emsg ) { return getErrorMessage( ERROR_RANGE_PROBLEM_GET, emsg ); };
+    catch( const std::exception& emsg ) { return getErrorMessage( ERROR_RANGE_PROBLEM_GET, emsg ); };
 
     if( range.empty() )
         return getErrorMessage( ERROR_RANGE_EMPTY, "range_is_null" );
@@ -20,7 +20,7 @@ std::string server::typecommands::TypePCommands::getPulse()
 {
     std::vector<int> newParams;
     try { newParams = paramsToSizeT(); }
-    catch( const std::string& emsg ) { return getErrorMessage( ERROR_GET_DELAY_UNKNOWN, emsg ); };
+    catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_DELAY_UNKNOWN, emsg ); };
 
     if( newParams[2] > _oscilloscope->getChannelsSize() )
         return getErrorMessage( ERROR_GET_CHANNEL_NUMBER_UNKNOWN, "" );
@@ -33,14 +33,14 @@ std::string server::typecommands::TypePCommands::getPulse()
 
     oscilloscopes::OscSigframe osf;
     try { osf = _oscilloscope->getSignalFrame( newParams[1] ); }
-    catch( const std::string& emsg ) { return getErrorMessage( ERROR_GET_PROBLEM_GET, emsg ); };
+    catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_PROBLEM_GET, emsg ); };
 
     if( newParams[2] == 0 )
         return getErrorMessage( ERROR_GET_CHANNEL_NUMBER_UNKNOWN, "" );  
 
     std::string returnMessage;
     try { returnMessage = getSuccessMessage( osf[( newParams[2] - 1 )]._signal ); }
-    catch( const std::string& emsg ) { return getErrorMessage( ERROR_GET_MESSAGE_THROW, emsg ); };
+    catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_MESSAGE_THROW, emsg ); };
     return returnMessage;
 }
 
@@ -53,7 +53,7 @@ std::string server::typecommands::TypePCommands::call( const std::string& conten
             return getRange();
         return getPulse();
     }
-    catch( const std::string& emsg )
+    catch( const std::exception& emsg )
     {
         return getErrorMessage( "PULSE_EXTRA", emsg );
     };
