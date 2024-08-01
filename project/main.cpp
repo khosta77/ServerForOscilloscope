@@ -1,4 +1,5 @@
-#include "../oscPlug/oscilloscope_plug.h"
+#include "../HT6022_lib_cpp/project/hantek6022.h"
+//#include "../oscPlug/oscilloscope_plug.h"
 #include "Server.h"
 
 #define SERVER_ADRESS std::string("192.168.1.65")
@@ -8,8 +9,8 @@
 
 int main()
 {
-    oscilloscopes::plug::OscPlug op;
-    server::CommandDecoder cmdec( PREFIX, &op );
+    oscilloscopes::hantek::Hantek6022 oscilloscope;
+    server::CommandDecoder cmdec( PREFIX, &oscilloscope );
     server::Server server( SERVER_ADRESS, SERVER_PORT, &cmdec );
     return server.run();
 }
