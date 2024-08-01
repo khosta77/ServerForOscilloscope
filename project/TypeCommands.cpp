@@ -1,5 +1,26 @@
 #include "TypeCommands.h"
 
+/** @brief write - записывает огромный массив в строку капец как быстро, исправил ошибку старого метода, 
+ *                 теперь все тип-топ
+ *  @param prm - вектор
+ *  @param prefix - префикс
+ *  @param command - команда
+ * */
+template<typename T>
+static std::string write( const std::vector<T>& prm, const std::string& prefix, const std::string& command )
+{
+    std::ostringstream oss;
+    oss << ( prefix + ":" + command + "=" );
+    for( size_t i = 0, _I = ( v.size() - 1 ), I = prm.size() ; i < I ; ++i )
+    {
+        oss << prm[i];
+        if( i != _I )
+            oss << ".";
+    }
+    oss << ":xor=valXor;";
+    return oss.str();
+}
+
 void server::typecommands::TypeCommands::clear()
 {
     for( auto& it : _param )
@@ -25,9 +46,17 @@ void server::typecommands::TypeCommands::parseContent( const std::string& conten
     }
 }
 
-std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& prm, const std::string& err )
+std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& prm,
+                                                                 const std::exception& emsg )
 {
-    return std::string( ( _PREFIX + ":" + _COMMAND + "=" + prm + ":error=" + err + ":xor=valXor;" ) );
+    return std::string( ( _PREFIX + ":" + _COMMAND + "=" + prm + ":error=" + std::string( emsg.what() )
+                         + ":xor=valXor;" ) );
+}
+
+std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& prm,
+                                                                 const std::string& emsg )
+{
+    return std::string( ( _PREFIX + ":" + _COMMAND + "=" + prm + ":error=" + emsg + ":xor=valXor;" ) );
 }
 
 std::string server::typecommands::TypeCommands::getErrorMessage()
@@ -47,18 +76,12 @@ std::string server::typecommands::TypeCommands::getSuccessMessage( const size_t&
 
 std::string server::typecommands::TypeCommands::getSuccessMessage( const std::vector<size_t>& prm )
 {
-    std::string message = ( _PREFIX + ":" + _COMMAND + "=" );
-    for( const auto& it : prm )  // На больших значениях очень плохо
-        message = ( message + std::to_string(it) + "," );
-    return ( message + ":xor=valXor;" );
+    return write<size_t>( prm, _PREFIX, _COMMAND );
 }
 
 std::string server::typecommands::TypeCommands::getSuccessMessage( const std::vector<uint16_t>& prm )
 {
-    std::string message = ( _PREFIX + ":" + _COMMAND + "=" );
-    for( const auto& it : prm )  // На больших значениях очень плохо
-        message = ( message + std::to_string(it) + "," );
-    return ( message + ":xor=valXor;" );
+    return write<uint16_t>( prm, _PREFIX, _COMMAND );
 }
 
 std::string server::typecommands::TypeCommands::getSuccessMessage()

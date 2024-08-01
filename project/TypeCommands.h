@@ -50,7 +50,7 @@ namespace server {
             oscilloscopes::Oscilloscope *_oscilloscope;
     
             std::vector<std::string> _param;
-            size_t _startXOR;
+            size_t _startXOR;  // Пока не используется, пусть будет
 
             const std::string _PREFIX;
             const std::string _COMMAND;
@@ -71,7 +71,8 @@ namespace server {
              *  @param prm - параметр, если требуется
              *  @param err - ошибка
              * */
-            std::string getErrorMessage( const std::string& prm, const std::string& err );
+            std::string getErrorMessage( const std::string& prm, const std::exception& emsg );
+            std::string getErrorMessage( const std::string& prm, const std::string& emsg );
 
             std::string getErrorMessage();
 
@@ -82,15 +83,16 @@ namespace server {
              * */
             std::string getSuccessMessage( const size_t& prm );
 
-            /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения, для std::vector<size_t>
+            /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения, для std::vector<T>
              *  @param prm - параметр, который надо вернуть
              * */
             std::string getSuccessMessage( const std::vector<size_t>& prm );
+            std::string getSuccessMessage( const std::vector<uint16_t>& prm );
 
             /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения, для std::vector<uint16_t>
              *  @param prm - параметр, который надо вернуть
              * */
-            std::string getSuccessMessage( const std::vector<uint16_t>& prm );
+            //std::string getSuccessMessage( const std::vector<uint16_t>& prm );
 
             std::string getSuccessMessage();
 
