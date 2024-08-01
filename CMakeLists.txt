@@ -8,6 +8,8 @@ if(APPLE)  # Код для MacOS
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
     message("-- build for MacOS ${OSX_VERSION}")
+    include_directories(/opt/homebrew/Cellar/libusb/1.0.26/include)
+    link_directories(/opt/homebrew/Cellar/libusb/1.0.26/lib)
 endif()
 
 execute_process(  # Проверим есть ли у нас операционка Raspbian
@@ -26,7 +28,6 @@ if(IS_THIS_RASPBERRY_PI STREQUAL "NAME=\"Raspbian GNU/Linux\"")
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
     message("-- build for${RASPBERRY_PI_INFO}")
-
 endif()
 
 
@@ -42,6 +43,8 @@ add_executable(
     main.out
     ./project/main.cpp
     ./project/CommandDecoder.cpp
+    ./HT6022_lib_cpp/project/ht6022lib.cpp
+    ./HT6022_lib_cpp/project/hantek6022.cpp
     ./oscPlug/oscilloscope_plug.cpp
     ./project/Server.cpp
     ./project/TypeCommands.cpp
@@ -53,7 +56,7 @@ add_executable(
 
 # Включение заголовочных файлов и библиотек libusb
 if(APPLE)
-
+    target_link_libraries(main.out libusb-1.0.dylib)
 endif()
 
 if(IS_THIS_RASPBERRY_PI STREQUAL "NAME=\"Raspbian GNU/Linux\"")
