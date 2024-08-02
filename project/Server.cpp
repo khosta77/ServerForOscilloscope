@@ -32,7 +32,7 @@ void server::Server::sockAccept( int& sock )
 std::string server::Server::readFromRecv()
 {
     std::string receivedData;
-    char buffer[1024];
+    char *buffer = new char[1024];
     while(true)
     {
         int bytesReceived = recv( sock, buffer, 1024, 0 );
@@ -42,19 +42,18 @@ std::string server::Server::readFromRecv()
         if( receivedData.back() == ';' )
             break;
     }
+    delete []buffer;
     return receivedData;
 }
 
 void server::Server::sendToSock( const std::string& msg )
 {
-    std::cout << "Start send" << std::endl;
     const char* dataPtr = msg.c_str();
     size_t dataSize = msg.length();
     size_t totalSent = 0;
     while( totalSent < dataSize )
     {
         int bytesSent = send( sock, ( dataPtr + totalSent ), ( dataSize - totalSent ), 0 );
-        std::cout << bytesSent << std::endl;
         if( bytesSent == -1 )
             break;
         totalSent += bytesSent;
