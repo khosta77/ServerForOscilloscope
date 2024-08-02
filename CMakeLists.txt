@@ -35,8 +35,13 @@ endif()
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
+SET(CMAKE_BUILD_TYPE "Debug") 
+# Add support for GDB
+SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g2 -ggdb")
+SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
+
+#set(THREADS_PREFER_PTHREAD_FLAG ON)
+#find_package(Threads REQUIRED)
 
 # Добавление исполняемого файла с именем main.out
 add_executable(
@@ -51,6 +56,7 @@ add_executable(
     ./project/TypeVCommands.cpp
     ./project/TypeSCommands.cpp
     ./project/TypePCommands.cpp
+    ./project/TypeICommands.cpp
     )
 
 
