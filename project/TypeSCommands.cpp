@@ -37,7 +37,7 @@ std::string server::typecommands::TypeSCommands::call( const std::string& conten
         parseContent( content, i, 2 );
         if( _param[0] == "_" )
             return getRange();
-        if( _param[1] == "?" )
+        if( _param[0] == "?" )
             return getCurrent();
         return setValue();
     }
