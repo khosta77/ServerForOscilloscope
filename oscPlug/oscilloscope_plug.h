@@ -65,14 +65,19 @@ namespace oscilloscopes
 
             ~OscPlug()
             {
-                for( auto it : _oscSignal )
-                    it.second._signal.clear();
-                _oscSignal.clear();
+                //for( auto it : _oscSignal )
+                //    it.second._signal.clear();
+                //_oscSignal.clear();
             }
 
             size_t getChannelsSize() override
             {
                 return _CH_size;
+            }
+
+            std::string whoAmI() override
+            {
+                return std::string("Заглушка");
             }
             
             void setSampleRate( const size_t& SR ) override
