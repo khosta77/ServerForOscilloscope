@@ -11,7 +11,7 @@ static std::string write( const std::vector<T>& prm, const std::string& prefix, 
 {
     std::ostringstream oss;
     oss << ( prefix + ":" + command + "=" );
-    for( size_t i = 0, _I = ( v.size() - 1 ), I = prm.size() ; i < I ; ++i )
+    for( size_t i = 0, _I = ( prm.size() - 1 ), I = prm.size() ; i < I ; ++i )
     {
         oss << prm[i];
         if( i != _I )
@@ -34,7 +34,7 @@ void server::typecommands::TypeCommands::parseContent( const std::string& conten
     clear();
     for( size_t j = i, pi = 0; j < content.size(); ++j )
     {
-        if( ( content[j] == ',' ) || ( content[j] == ':' ) )
+        if( ( content[j] == ',' ) || ( content[j] == ':' ) || ( content[j] == '.' ) )
             ++pi;
         else
             _param[pi] += content[j];
@@ -72,6 +72,11 @@ std::string server::typecommands::TypeCommands::getErrorUnknownMessage()
 std::string server::typecommands::TypeCommands::getSuccessMessage( const size_t& prm )
 {
     return std::string( ( _PREFIX + ":" + _COMMAND + "=" + std::to_string(prm) + ":xor=valXor;" ) );
+}
+
+std::string server::typecommands::TypeCommands::getSuccessMessage( const std::string& prm )
+{
+    return std::string( ( _PREFIX + ":" + _COMMAND + "=" + prm + ":xor=valXor;" ) );
 }
 
 std::string server::typecommands::TypeCommands::getSuccessMessage( const std::vector<size_t>& prm )
