@@ -28,6 +28,15 @@ if(IS_THIS_RASPBERRY_PI STREQUAL "NAME=\"Raspbian GNU/Linux\"")
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
     message("-- build for${RASPBERRY_PI_INFO}")
+
+    include_directories(/usr/local/include)
+    link_directories(/usr/local/lib)
+    set(WIRINGPI_LIBRARIES wiringPi)
+
+    set(ENV{PKG_CONFIG_PATH} "/usr/lib/arm-linux-gnueabihf/pkgconfig")
+    # Использование pkg-config для поиска пакета libusb
+    find_package(PkgConfig REQUIRED)
+    pkg_search_module(LIBUSB REQUIRED libusb-1.0)
 endif()
 
 
@@ -35,13 +44,11 @@ endif()
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-SET(CMAKE_BUILD_TYPE "Debug") 
-# Add support for GDB
-SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -Wall -g -ggdb")
-SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
+#SET(CMAKE_BUILD_TYPE "Debug") 
 
-#set(THREADS_PREFER_PTHREAD_FLAG ON)
-#find_package(Threads REQUIRED)
+# Add support for GDB
+#SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -Wall -g -ggdb")
+#SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
 
 # Добавление исполняемого файла с именем main.out
 add_executable(
@@ -60,8 +67,8 @@ add_executable(
     ./project/TypeICommands.cpp
     )
 
-add_definitions(${CMAKE_CXX_FLAGS_DEBUG})
-add_definitions(${CMAKE_CXX_FLAGS_RELEASE})
+#add_definitions(${CMAKE_CXX_FLAGS_DEBUG})
+#add_definitions(${CMAKE_CXX_FLAGS_RELEASE})
 
 # Включение заголовочных файлов и библиотек libusb
 if(APPLE)
