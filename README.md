@@ -36,6 +36,12 @@ int main()
 git clone --recurse-submodules git@github.com:khosta77/ServerForOscilloscope.git
 ```
 
+или, если не планируется *пушить* код:
+
+```cmd
+git clone --recurse-submodules https://github.com/khosta77/ServerForOscilloscope.git
+```
+
 2. Переходим в директорию
 
 ```cmd
@@ -52,6 +58,14 @@ git submodule foreach git pull origin main
 
 ```cmd
 cmake .
+```
+
+```cmd
 make
 ```
 
+5. Запуск. Для примера
+
+```
+./main osc 192.168.1.91 8000
+```
