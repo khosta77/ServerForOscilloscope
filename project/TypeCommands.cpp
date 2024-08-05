@@ -23,8 +23,15 @@ static std::string write( const std::vector<T>& prm, const std::string& prefix, 
 
 void server::typecommands::TypeCommands::clear()
 {
-    for( auto& it : _param )
-        it = "";
+    if( !_param.empty() )
+    {
+        for( auto& it : _param )
+        {
+            if( !it.empty() )
+                it.clear();
+        }
+        _param.clear();
+    }
     _startXOR = 0;
 }
 
@@ -32,18 +39,26 @@ void server::typecommands::TypeCommands::parseContent( const std::string& conten
                                                        const size_t& end )
 {
     clear();
+    std::string buffer = "";  // Вот тут была зарыта собака
     for( size_t j = i, pi = 0; j < content.size(); ++j )
     {
         if( ( content[j] == ',' ) || ( content[j] == ':' ) || ( content[j] == '.' ) )
+        {
             ++pi;
+            _param.push_back(buffer);
+            buffer = "";
+        }
         else
-            _param[pi] += content[j];
+            buffer += content[j];
+
         if( pi == end )
         {
             _startXOR = ( j + 1 );
+            buffer.clear();
             break;
         }
     }
+    buffer.clear();
 }
 
 std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& prm,

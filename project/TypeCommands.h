@@ -90,10 +90,8 @@ namespace server {
             std::string getSuccessMessage( const std::vector<size_t>& prm );
             std::string getSuccessMessage( const std::vector<uint16_t>& prm );
 
-            /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения, для std::vector<uint16_t>
-             *  @param prm - параметр, который надо вернуть
+            /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения
              * */
-            //std::string getSuccessMessage( const std::vector<uint16_t>& prm );
 
             std::string getSuccessMessage();
 
@@ -107,8 +105,8 @@ namespace server {
             /** @brief TypeCommands Конструктор инициализации, для уменьшения строчек кода в дальнейшем
              * */
             TypeCommands( oscilloscopes::Oscilloscope *osc, const std::string& prefix,
-                          const std::string& command, const ssize_t& size ) : _oscilloscope(osc),
-                          _param(size), _startXOR(0), _PREFIX(prefix), _COMMAND(command) {}
+                          const std::string& command ) : _oscilloscope(osc), _startXOR(0), _PREFIX(prefix),
+                          _COMMAND(command) {}
 
             virtual std::string call( const std::string& content, const size_t& i ) = 0;
         };
