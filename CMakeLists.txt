@@ -51,6 +51,7 @@ add_executable(
     ./HT6022_lib_cpp/project/ht6022lib.cpp
     ./HT6022_lib_cpp/project/hantek6022.cpp
     ./oscPlug/oscilloscope_plug.cpp
+    ./project/utils.cpp
     ./project/Server.cpp
     ./project/TypeCommands.cpp
     ./project/TypeVCommands.cpp
