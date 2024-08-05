@@ -10,14 +10,14 @@ if(APPLE)  # Код для MacOS
     message("-- build for MacOS ${OSX_VERSION}")
     include_directories(/opt/homebrew/Cellar/libusb/1.0.26/include)
     link_directories(/opt/homebrew/Cellar/libusb/1.0.26/lib)
-endif()
-
-execute_process(  # Проверим есть ли у нас операционка Raspbian
+else()
+    execute_process(  # Проверим есть ли у нас операционка Raspbian
         COMMAND cat /etc/os-release
         COMMAND grep "NAME=\"Raspbian GNU/Linux\""
         OUTPUT_VARIABLE IS_THIS_RASPBERRY_PI
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+endif()
 
 if(IS_THIS_RASPBERRY_PI STREQUAL "NAME=\"Raspbian GNU/Linux\"")
     execute_process(  # Выведем уведомление о том какая у нас версия Raspberry
@@ -37,7 +37,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 SET(CMAKE_BUILD_TYPE "Debug") 
 # Add support for GDB
-SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g2 -ggdb")
+SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -Wall -g -ggdb")
 SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
 
 #set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -60,6 +60,8 @@ add_executable(
     ./project/TypeICommands.cpp
     )
 
+add_definitions(${CMAKE_CXX_FLAGS_DEBUG})
+add_definitions(${CMAKE_CXX_FLAGS_RELEASE})
 
 # Включение заголовочных файлов и библиотек libusb
 if(APPLE)
@@ -67,5 +69,8 @@ if(APPLE)
 endif()
 
 if(IS_THIS_RASPBERRY_PI STREQUAL "NAME=\"Raspbian GNU/Linux\"")
-
+    include_directories(${LIBUSB_INCLUDE_DIRS})
+    target_link_libraries(main.out ${LIBUSB_LIBRARIES})
+    target_link_libraries(main.out ${WIRINGPI_LIBRARIES})
+    add_compile_definitions(RASPBERRY_PI)
 endif()
