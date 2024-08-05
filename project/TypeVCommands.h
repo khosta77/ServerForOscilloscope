@@ -63,7 +63,7 @@ namespace server
 
         public:
             TypeVCommands( oscilloscopes::Oscilloscope *osc, const std::string& prefix,
-                           const std::string& command ) : TypeCommands( osc, prefix, command, 2 ) {}
+                           const std::string& command ) : TypeCommands( osc, prefix, command ) {}
 
             ~TypeVCommands() { _param.clear(); }
 
