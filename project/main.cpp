@@ -1,18 +1,17 @@
-#include "../HT6022_lib_cpp/project/hantek6022.h"
-//#include "../oscPlug/oscilloscope_plug.h"
+//#include "../HT6022_lib_cpp/project/hantek6022.h"
+#include "../oscPlug/oscilloscope_plug.h"
 #include "Server.h"
+#include "utils.h"
 
-#define SERVER_ADRESS std::string("192.168.1.65")
-#define SERVER_PORT 8000
-
-#define PREFIX std::string("osc")
-
-int main()
+int main( int argc, char* argv[] )
 {
-    oscilloscopes::hantek::Hantek6022 oscilloscope;
-    //oscilloscopes::plug::OscPlug oscilloscope;
-    server::CommandDecoder cmdec( PREFIX, &oscilloscope );
-    server::Server server( SERVER_ADRESS, SERVER_PORT, &cmdec );
+    //oscilloscopes::hantek::Hantek6022 oscilloscope;
+    oscilloscopes::plug::OscPlug oscilloscope;
+    auto arg = readArg( argc, argv );
+    if( std::get<0>(arg) == "" )
+        return -1;
+    server::CommandDecoder cmdec( std::get<0>(arg), &oscilloscope );
+    server::Server server( std::get<1>(arg), std::get<2>(arg), &cmdec );
     return server.run();
 }
 
