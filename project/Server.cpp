@@ -36,9 +36,9 @@ std::string server::Server::readFromRecv()
     while(true)
     {
         int bytesReceived = recv( sock, buffer, 1024, 0 );
-        if (bytesReceived <= 0)
+        if( bytesReceived <= 0 )
             break;
-        receivedData.append(buffer, bytesReceived);
+        receivedData.append( buffer, bytesReceived );
         if( receivedData.back() == ';' )
             break;
     }
