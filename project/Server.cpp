@@ -1,5 +1,6 @@
 #include "Server.h"
 
+#if 0
 void server::Server::socketInit()
 {
     listener = socket( AF_INET, SOCK_STREAM, 0 );
@@ -86,5 +87,5 @@ int server::Server::run()
     }
     return 0;
 }
-
+#endif
 
