@@ -25,9 +25,9 @@ std::string server::typecommands::TypeSCommands::setValue()
     try { new_s_value = std::stoi( _param[0] ); }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_SET_UNKNOWN_PARAMETR, emsg ); };
 
-    try { _oscilloscope->setSampleRate( new_s_value ); }
+    try { new_s_value = _oscilloscope->setSampleRate( new_s_value ); }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_SET_PROBLEM_SET, emsg ); };
-    return getSuccessMessage();
+    return getSuccessMessage( new_s_value );
 }
 
 std::string server::typecommands::TypeSCommands::call( const std::string& content, const size_t& i )
