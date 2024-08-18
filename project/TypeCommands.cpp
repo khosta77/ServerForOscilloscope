@@ -99,9 +99,9 @@ std::string server::typecommands::TypeCommands::getSuccessMessage( const std::ve
     return write<size_t>( prm, _PREFIX, _COMMAND );
 }
 
-std::string server::typecommands::TypeCommands::getSuccessMessage( const std::vector<uint16_t>& prm )
+std::string server::typecommands::TypeCommands::getSuccessMessage( const std::vector<float>& prm )
 {
-    return write<uint16_t>( prm, _PREFIX, _COMMAND );
+    return write<float>( prm, _PREFIX, _COMMAND );
 }
 
 std::string server::typecommands::TypeCommands::getSuccessMessage()

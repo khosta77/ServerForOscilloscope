@@ -88,7 +88,7 @@ namespace server {
              *  @param prm - параметр, который надо вернуть
              * */
             std::string getSuccessMessage( const std::vector<size_t>& prm );
-            std::string getSuccessMessage( const std::vector<uint16_t>& prm );
+            std::string getSuccessMessage( const std::vector<float>& prm );
 
             /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения
              * */
