@@ -46,10 +46,10 @@ std::string server::typecommands::TypeVCommands::setValue()
     try { new_v_value = std::stoi( _param[1] ); }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_SET_UNKNOWN_NEW_LEVEL, emsg ); };
 
-    try { _oscilloscope->setInputLevel( ( channel_number - 1 ), new_v_value ); }
+    try { new_v_value = _oscilloscope->setInputLevel( ( channel_number - 1 ), new_v_value ); }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_SET_PROBLEM_SET, emsg ); };
 
-    return getSuccessMessage();
+    return getSuccessMessage( new_v_value );
 }
 
 std::string server::typecommands::TypeVCommands::call( const std::string& content, const size_t& i )
