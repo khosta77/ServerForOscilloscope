@@ -28,52 +28,42 @@ oscilloscopes::plug::OscPlug::~OscPlug()
     _oscSignal.clear();
 }
 
-size_t oscilloscopes::plug::OscPlug::getChannelsSize()
-{
-    return _CH_size;
-}
-
-std::string oscilloscopes::plug::OscPlug::whoAmI()
-{
-    return std::string("Заглушка");
-}
+const size_t oscilloscopes::plug::OscPlug::getChannelsSize() const { return _CH_size; }
+static const std::string Name = "Заглушка";
+const std::string oscilloscopes::plug::OscPlug::whoAmI() const { return Name; }
             
-void oscilloscopes::plug::OscPlug::setSampleRate( const size_t& SR )
+size_t oscilloscopes::plug::OscPlug::setSampleRate( const size_t& SR )
 {
     std::cout << "Вызван метод setSampleRate, старое значение = " << _oscSignal[0]._sampleRate;
     for( auto& it : _oscSignal )
         it.second._sampleRate = SR;
     std::cout << " новое = " << _oscSignal[0]._sampleRate << std::endl;
+    return _oscSignal[0]._sampleRate;
 }
 
-size_t oscilloscopes::plug::OscPlug::getSampleRate()
+const size_t oscilloscopes::plug::OscPlug::getSampleRate()
 {
     std::cout << "Вызван метод getSampleRate вернул = " << _oscSignal[0]._sampleRate << std::endl;
     return _oscSignal[0]._sampleRate;
 }
-            
-std::vector<size_t> oscilloscopes::plug::OscPlug::getRangeSampleRate()
-{
-    return _sample;
-}
 
-void oscilloscopes::plug::OscPlug::setInputLevel( const uint8_t& CHx, const size_t& IL )
+const std::vector<size_t> oscilloscopes::plug::OscPlug::getRangeSampleRate() const { return _sample; }
+
+size_t oscilloscopes::plug::OscPlug::setInputLevel( const uint8_t& CHx, const size_t& IL )
 {
     std::cout << "Вызван метод setInputLevel[" << ((int)CHx) << "], старое значение = " << _oscSignal[CHx]._inputLevel;
     _oscSignal[CHx]._inputLevel = IL;
     std::cout << " новое = " << _oscSignal[CHx]._inputLevel << std::endl;
+    return _oscSignal[CHx]._inputLevel;
 }
 
-size_t oscilloscopes::plug::OscPlug::getInputLevel( const uint8_t &CHx )
+const size_t oscilloscopes::plug::OscPlug::getInputLevel( const uint8_t &CHx )
 {
     std::cout << "Вызван метод getInputLevel вернул = " << _oscSignal[CHx]._inputLevel << std::endl;
     return _oscSignal[CHx]._inputLevel;
 }
             
-std::vector<size_t> oscilloscopes::plug::OscPlug::getRangeInputLevel()
-{
-    return _level;
-}
+const std::vector<size_t> oscilloscopes::plug::OscPlug::getRangeInputLevel() const { return _level; }
 
 oscilloscopes::OscSigframe oscilloscopes::plug::OscPlug::getSignalFrame( const size_t& FS )
 {
@@ -84,7 +74,7 @@ oscilloscopes::OscSigframe oscilloscopes::plug::OscPlug::getSignalFrame( const s
             _oscSignal[i]._signal.clear();
 
         for( size_t j = 0; j < FS; ++j ) 
-            _oscSignal[i]._signal.push_back( distr(gen) );
+            _oscSignal[i]._signal.push_back( ((float)distr(gen)) );
 
         _oscSignal[i]._signalSize = FS;
     }
@@ -92,9 +82,22 @@ oscilloscopes::OscSigframe oscilloscopes::plug::OscPlug::getSignalFrame( const s
     return _oscSignal;
 }
 
-std::vector<size_t> oscilloscopes::plug::OscPlug::getRangeSignalFrame()
+const std::vector<size_t> oscilloscopes::plug::OscPlug::getRangeSignalFrame() const { return _frame; }
+
+oscilloscopes::OscSignal oscilloscopes::plug::OscPlug::getSignalFromTrigger( const uint8_t& i,
+        const float& level, const uint8_t& comp )
 {
-    return _frame;
+    if( !_oscSignal[i]._signal.empty() )
+        _oscSignal[i]._signal.clear();
+
+    for( size_t j = 0; j < 10000; ++j ) 
+        _oscSignal[i]._signal.push_back( ((float)distr(gen)) - level );
+
+    _oscSignal[i]._signalSize = 10000;
+    return _oscSignal[i];
 }
+
+const void oscilloscopes::plug::OscPlug::onTrigger() { return; }
+const void oscilloscopes::plug::OscPlug::offTrigger() { return; }
 
 

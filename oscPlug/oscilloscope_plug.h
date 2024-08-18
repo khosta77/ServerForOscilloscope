@@ -23,19 +23,23 @@ namespace oscilloscopes
             OscPlug( const int& CH_size = 2, const size_t& SR = 10, const size_t& IL = 5 );
             ~OscPlug();
 
-            size_t getChannelsSize() override;
-            std::string whoAmI() override;
+            const size_t getChannelsSize() const override;
+            const std::string whoAmI() const override;
             
-            void setSampleRate( const size_t& SR ) override;
-            size_t getSampleRate() override;
-            std::vector<size_t> getRangeSampleRate() override;
+            size_t setSampleRate( const size_t& SR ) override;
+            const size_t getSampleRate() override;
+            const std::vector<size_t> getRangeSampleRate() const override;
 
-            void setInputLevel( const uint8_t& CHx, const size_t& IL ) override;
-            size_t getInputLevel( const uint8_t &CHx ) override;
-            std::vector<size_t> getRangeInputLevel() override;
+            size_t setInputLevel( const uint8_t& CHx, const size_t& IL ) override;
+            const size_t getInputLevel( const uint8_t &CHx ) override;
+            const std::vector<size_t> getRangeInputLevel() const override;
 
             OscSigframe getSignalFrame( const size_t& FS ) override;
-            std::vector<size_t> getRangeSignalFrame() override;
+            const std::vector<size_t> getRangeSignalFrame() const override;
+
+            OscSignal getSignalFromTrigger( const uint8_t&, const float&, const uint8_t& ) override;
+            const void onTrigger() override;
+            const void offTrigger() override;
 
         };  // OscPlug
 
