@@ -11,29 +11,11 @@ namespace server
 
         class TypeICommands final : public TypeCommands
         {
-        private:
-
-            /** @brief getCurrent - В данным сценарии не использовать
-             * */
-            std::string getRange() override { return getErrorMessage(); }
-    
-            /** @brief getCurrent - В данным сценарии не использовать
-             * */
-            std::string getCurrent() override { return getErrorMessage(); }
-
-            /** @brief setValue - В данным сценарии не использовать
-             * */
-            std::string setValue() override { return getErrorMessage(); }
-
-            /** @brief getCurrent - В данным сценарии не использовать
-             * */
-            std::string getPulse() override { return getErrorMessage(); }
-
         public:
             TypeICommands( oscilloscopes::Oscilloscope *osc, const std::string& prefix,
                            const std::string& command ) : TypeCommands( osc, prefix, command ) {}
 
-            ~TypeICommands() { _param.clear(); }
+            ~TypeICommands() {}  //_param.clear(); }
 
             /** @brief call - Вызов соответствующей команды
              *  @param command - команда

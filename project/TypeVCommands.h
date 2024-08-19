@@ -24,7 +24,7 @@ namespace server
              *            | ERROR_RANGE_EMPTY            - ошибка связанная с тем, что считанное значение пусто
              *            + [error_name]: может быть что угодно
              * */
-            std::string getRange() override;
+            std::string getRange();
 
             /** @brief getCurrent - Получение текущего уровня выставленного на осциллографа пример команды:
              *                      * [prefix]:vx=[channel],[level]:xor=valXor;
@@ -38,7 +38,7 @@ namespace server
              *            | ERROR_CURRENT_PROBLEM_GET            - ошибка выполнения получения уровня
              *            + [error_name]: может быть что угодно
              * */
-            std::string getCurrent() override;
+            std::string getCurrent( const std::vector<std::string>& params );
 
             /** @brief setValue - Метод установки значения уровня по вертикали на осциллографе пример команды:
              *                    * [prefix]:vx=[channel],[level]:xor=valXor;
@@ -55,17 +55,13 @@ namespace server
              *            | ERROR_SET_PROBLEM_SET            - ошибка в методе
              *            + [error_name]: может быть что угодно
              * */
-            std::string setValue() override;
-
-            /** @brief getPulse - В данным сценарии не использовать
-             * */
-            std::string getPulse() override { return getErrorMessage(); }
+            std::string setValue( const std::vector<std::string>& params );
 
         public:
             TypeVCommands( oscilloscopes::Oscilloscope *osc, const std::string& prefix,
                            const std::string& command ) : TypeCommands( osc, prefix, command ) {}
 
-            ~TypeVCommands() { _param.clear(); }
+            ~TypeVCommands() {}  // _param.clear(); }
 
             /** @brief call - Вызов соответствующей команды
              *  @param command - команда
