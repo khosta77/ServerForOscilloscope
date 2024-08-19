@@ -21,30 +21,12 @@ static std::string write( const std::vector<T>& prm, const std::string& prefix, 
     return oss.str();
 }
 
-#if 0
-void server::typecommands::TypeCommands::clear()
-{
-    if( !_param.empty() )
-    {
-        for( auto& it : _param )
-        {
-            if( !it.empty() )
-                it.clear();
-        }
-        _param.clear();
-    }
-    _startXOR = 0;
-}
-#endif
-
 std::pair<std::vector<std::string>, size_t> server::typecommands::TypeCommands::parseContent(
         const std::string& content, const size_t& i, const size_t& end )
 {
-    //clear();
     std::vector<std::string> param;
     size_t startXOR = 0;
-
-    std::string buffer = "";  // Вот тут была зарыта собака
+    std::string buffer = "";
     for( size_t j = i, pi = 0; j < content.size(); ++j )
     {
         if( ( content[j] == ',' ) || ( content[j] == ':' ) || ( content[j] == '.' ) )
@@ -66,6 +48,21 @@ std::pair<std::vector<std::string>, size_t> server::typecommands::TypeCommands::
     buffer.clear();
     return std::pair<std::vector<std::string>, size_t>( param, startXOR );
 }
+
+void sendToSock( const int& sock, const std::string& messsage )
+{
+    const char* dataPtr = messsage.c_str();
+    size_t dataSize = messsage.length();
+    size_t totalSent = 0;
+    while( totalSent < dataSize )
+    {
+        int bytesSent = send( sock, ( dataPtr + totalSent ), ( dataSize - totalSent ), 0 );
+        if( bytesSent == -1 )
+            break;
+        totalSent += bytesSent;
+    }
+}
+
 
 std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& prm,
                                                                  const std::exception& emsg )

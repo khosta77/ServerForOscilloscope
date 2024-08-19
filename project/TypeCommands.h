@@ -48,25 +48,19 @@
 #define ERROR_GET_MESSAGE_THROW "getSuccessMessageGet"
 #define ERROR_GET_CHANNEL_NUMBER_UNKNOWN "ch_unknown"
 
-namespace server {
+namespace server
+{
 
-    namespace typecommands {
+    namespace typecommands
+    {
 
         class TypeCommands
         {
         protected:
             oscilloscopes::Oscilloscope *_oscilloscope;
     
-            //std::vector<std::string> _param;
-            //size_t _startXOR;  // Пока не используется, пусть будет
-
             const std::string _PREFIX;
             const std::string _COMMAND;
-
-            /** @brief clear - возможно не лучшее названии, нужен для очистки буфера, чтобы можно было
-             *                 много раз использовать
-             * */
-            //void clear();
 
             /** @brief parseContent - парсер \content на наличие параметров
              *  @param content - вся строка с контентом
@@ -76,20 +70,12 @@ namespace server {
             std::pair<std::vector<std::string>, size_t> parseContent( const std::string& content,
                                                                       const size_t& i, const size_t& end );
 
-            void sendToSock( const int& s, const std::string& msg )
-            {
-                const char* dataPtr = msg.c_str();
-                size_t dataSize = msg.length();
-                size_t totalSent = 0;
-                while( totalSent < dataSize )
-                {
-                    int bytesSent = send( s, ( dataPtr + totalSent ), ( dataSize - totalSent ), 0 );
-                    if( bytesSent == -1 )
-                        break;
-                    totalSent += bytesSent;
-                }
-            }
-
+            /** @brief sendToSock - метод для отправки данных в сокет
+             *  @param sock - сокет
+             *  @param message - сообщение.
+             * */
+            void sendToSock( const int& sock, const std::string& messsage );
+            
             /** @brief - Метод для возвращения ошибки, если такая ситуация произошла
              *  @param prm - параметр, если требуется
              *  @param err - ошибка

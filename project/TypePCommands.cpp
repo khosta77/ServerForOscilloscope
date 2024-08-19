@@ -1,5 +1,10 @@
 #include "TypePCommands.h"
 
+static std::vector<int> paramsToSizeT( const std::vector<std::string>& params )
+{
+    return std::vector<int>{ std::stoi( params[0] ), std::stoi( params[1] ), std::stoi( params[2]) };
+}
+
 std::string server::typecommands::TypePCommands::getRange()
 {
     std::vector<size_t> range;
@@ -9,11 +14,6 @@ std::string server::typecommands::TypePCommands::getRange()
     if( range.empty() )
         return getErrorMessage( ERROR_RANGE_EMPTY, "range_is_null" );
     return getSuccessMessage(range);
-}
-
-std::vector<int> server::typecommands::TypePCommands::paramsToSizeT( const std::vector<std::string>& params )
-{
-    return std::vector<int>{ std::stoi( params[0] ), std::stoi( params[1] ), std::stoi( params[2]) };
 }
 
 std::string server::typecommands::TypePCommands::getPulse( const std::vector<std::string>& params )
@@ -58,7 +58,7 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
 
 std::string server::typecommands::TypePCommands::call( const std::string& content, const size_t& i )
 {
-    try  // Это на случай, если что-то ужасное случится
+    try
     {
         auto params = parseContent( content, i, 4 ).first;
         if( params.size() != 3 )

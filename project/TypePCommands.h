@@ -27,8 +27,6 @@ namespace server
              * */
             std::string getRange();
     
-            std::vector<int> paramsToSizeT( [[maybe_unused]] const std::vector<std::string>& params );
-
             /** @brief getPulse - Метод считывания данных с канала, пример:
              *                    * osc:pget=[delay],[points],[channel]:xor=valXor;
              *                    Параметры:
@@ -52,7 +50,7 @@ namespace server
             TypePCommands( oscilloscopes::Oscilloscope *osc, const std::string& prefix,
                            const std::string& command ) : TypeCommands( osc, prefix, command ) {}
 
-            ~TypePCommands() {}  // _param.clear(); }
+            ~TypePCommands() = default;
 
             /** @brief call - Вызов соответствующей команды
              *  @param command - команда

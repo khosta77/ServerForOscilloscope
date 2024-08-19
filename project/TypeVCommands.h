@@ -8,6 +8,7 @@ namespace server
 
     namespace typecommands
     {
+
         class TypeVCommands final : public TypeCommands
         {
         private:
@@ -61,7 +62,7 @@ namespace server
             TypeVCommands( oscilloscopes::Oscilloscope *osc, const std::string& prefix,
                            const std::string& command ) : TypeCommands( osc, prefix, command ) {}
 
-            ~TypeVCommands() {}  // _param.clear(); }
+            ~TypeVCommands() = default;
 
             /** @brief call - Вызов соответствующей команды
              *  @param command - команда

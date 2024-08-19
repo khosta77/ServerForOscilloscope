@@ -2,7 +2,7 @@
 
 std::string server::typecommands::TypeICommands::call( const std::string& content, const size_t& i )
 {
-    try  // Это на случай, если что-то ужасное случится
+    try
     {
         if( content == "channels" )
         {

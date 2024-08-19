@@ -32,7 +32,7 @@ std::string server::typecommands::TypeSCommands::setValue( const std::vector<std
 
 std::string server::typecommands::TypeSCommands::call( const std::string& content, const size_t& i )
 {
-    try  // Это на случай, если что-то ужасное случится
+    try
     {
         auto params = parseContent( content, i, 2 ).first;
         if( params.size() != 1 )

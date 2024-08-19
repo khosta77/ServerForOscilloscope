@@ -15,7 +15,7 @@ namespace server
             TypeICommands( oscilloscopes::Oscilloscope *osc, const std::string& prefix,
                            const std::string& command ) : TypeCommands( osc, prefix, command ) {}
 
-            ~TypeICommands() {}  //_param.clear(); }
+            ~TypeICommands() = default;
 
             /** @brief call - Вызов соответствующей команды
              *  @param command - команда
