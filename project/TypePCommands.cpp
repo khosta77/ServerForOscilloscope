@@ -5,6 +5,19 @@ static std::vector<int> paramsToSizeT( const std::vector<std::string>& params )
     return std::vector<int>{ std::stoi( params[0] ), std::stoi( params[1] ), std::stoi( params[2]) };
 }
 
+/** @brief stos - string to size_t
+ *  @param str - string
+ * */
+template<typename T>
+static T stot( const std::string& str )
+{
+    T tmp;
+    std::stringstream sstream(str);
+    sstream >> tmp;
+    return tmp;
+}
+
+
 std::string server::typecommands::TypePCommands::getRange()
 {
     std::vector<size_t> range;
@@ -56,21 +69,50 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
     return returnMessage;
 }
 
-std::string server::typecommands::TypePCommands::call( const std::string& content, const size_t& i )
+std::string server::typecommands::TypePCommands::call( const std::string& content, const size_t& i, const bool& isDualUse )
 {
-    try
+    if( !isDualUse )
     {
-        auto params = parseContent( content, i, 4 ).first;
-        if( params.size() != 3 )
-            return getErrorMessage( "1", "" );
-        if( ( ( params[0] == "_" ) && ( params[1] == "_" ) && ( params[2] == "_" ) ) )
-            return getRange();
-        return getPulse( params );
+        try
+        {
+            auto params = parseContent( content, i, 4 ).first;
+            if( params.size() != 3 )
+                return getErrorMessage( "1", "" );
+            if( ( ( params[0] == "_" ) && ( params[1] == "_" ) && ( params[2] == "_" ) ) )
+                return getRange();
+            return getPulse( params );
+        }
+        catch( ... )
+        {
+            return getErrorMessage( "PULSE_EXTRA", "" );
+        };
     }
-    catch( const std::exception& emsg )
+    else
     {
-        return getErrorMessage( "PULSE_EXTRA", emsg );
-    };
+        try
+        {
+            auto params = parseContent( content, i, 4 ).first;
+            if( params.size() != 3 )
+                return getErrorMessage( "1", "trig_param_error" );
+            std::vector<int> newParams;
+            try
+            {
+                _oscilloscope->offTrigger();
+                _trig_CHx = stot<uint8_t>( params[0] );
+                _trig_level = stot<float>( params[1] );
+                _trig_comp = stot<uint8_t>( params[2] );
+            }
+            catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_DELAY_UNKNOWN, emsg ); }
+            std::string message = getSuccessMessage( "trig", params );
+            params.clear();
+            return message;
+        }
+        catch( ... )
+        {
+            return getErrorMessage( "TRIG_EXTRA", "" );
+        };
+
+    }
     return getErrorUnknownMessage();
 }
 

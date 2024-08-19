@@ -12,7 +12,10 @@ namespace server
         class TypePCommands final : public TypeCommands
         {
         private:
-
+            uint8_t _trig_CHx;
+            float   _trig_level;
+            uint8_t _trig_comp;
+ 
             /** @brief getRange - Метод получения размера для команд типа V, пример:
              *                    * [prefix]:pulse=[delay],[points],[channel]:xor=valXor;
              *                    должно быть '_', чтобы вызвать метод
@@ -57,7 +60,7 @@ namespace server
              *  @param content - контент
              *  @param i       - номер после =
              * */
-            std::string call( const std::string& content, const size_t& i ) override;
+            std::string call( const std::string& content, const size_t& i, const bool& isDualUse = false ) override;
 
         };
 
