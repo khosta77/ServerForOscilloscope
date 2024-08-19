@@ -97,6 +97,21 @@ std::string server::typecommands::TypeCommands::getSuccessMessage( const std::st
     return std::string( ( _PREFIX + ":" + _COMMAND + "=" + prm + ":xor=valXor;" ) );
 }
 
+std::string server::typecommands::TypeCommands::getSuccessMessage( const std::string& command,
+                                                                   const std::vector<std::string>& params )
+{
+    std::ostringstream oss;
+    oss << ( _PREFIX + ":" + command + "=ok," );
+    for( size_t i = 0, _I = ( params.size() - 1 ), I = params.size() ; i < I ; ++i )
+    {
+        oss << params[i];
+        if( i != _I )
+            oss << ",";
+    }
+    oss << ":xor=valXor;";
+    return oss.str();
+}
+
 std::string server::typecommands::TypeCommands::getSuccessMessage( const std::vector<size_t>& prm )
 {
     return write<size_t>( prm, _PREFIX, _COMMAND );

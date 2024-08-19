@@ -92,6 +92,8 @@ namespace server
              * */
             std::string getSuccessMessage( const size_t& prm );
             std::string getSuccessMessage( const std::string& prm );
+            std::string getSuccessMessage( const std::string& command,
+                                           const std::vector<std::string>& params );
 
             /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения, для std::vector<T>
              *  @param prm - параметр, который надо вернуть
@@ -110,7 +112,7 @@ namespace server
                           const std::string& command ) : _oscilloscope(osc), _PREFIX(prefix),
                           _COMMAND(command) {}
 
-            virtual std::string call( const std::string& content, const size_t& i ) = 0;
+            virtual std::string call( const std::string& content, const size_t& i, const bool& isDualUse ) = 0;
         };
 
     };  // typecommands
