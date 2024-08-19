@@ -20,6 +20,14 @@
 #include <sstream>
 #include <type_traits>
 
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <fcntl.h>
+
 #include "oscilloscopes.h"
 
 #define ERROR_RANGE_UNKHOWN_PARAMETR "param"
@@ -49,8 +57,8 @@ namespace server {
         protected:
             oscilloscopes::Oscilloscope *_oscilloscope;
     
-            std::vector<std::string> _param;
-            size_t _startXOR;  // Пока не используется, пусть будет
+            //std::vector<std::string> _param;
+            //size_t _startXOR;  // Пока не используется, пусть будет
 
             const std::string _PREFIX;
             const std::string _COMMAND;
@@ -58,14 +66,29 @@ namespace server {
             /** @brief clear - возможно не лучшее названии, нужен для очистки буфера, чтобы можно было
              *                 много раз использовать
              * */
-            void clear();
+            //void clear();
 
             /** @brief parseContent - парсер \content на наличие параметров
              *  @param content - вся строка с контентом
              *  @param i - номер после =
              *  @param end - колличество параметров, которые надо счить + 1
              * */
-            void parseContent( const std::string& content, const size_t& i, const size_t& end );
+            std::pair<std::vector<std::string>, size_t> parseContent( const std::string& content,
+                                                                      const size_t& i, const size_t& end );
+
+            void sendToSock( const int& s, const std::string& msg )
+            {
+                const char* dataPtr = msg.c_str();
+                size_t dataSize = msg.length();
+                size_t totalSent = 0;
+                while( totalSent < dataSize )
+                {
+                    int bytesSent = send( s, ( dataPtr + totalSent ), ( dataSize - totalSent ), 0 );
+                    if( bytesSent == -1 )
+                        break;
+                    totalSent += bytesSent;
+                }
+            }
 
             /** @brief - Метод для возвращения ошибки, если такая ситуация произошла
              *  @param prm - параметр, если требуется
@@ -92,20 +115,13 @@ namespace server {
 
             /** @brief getSuccessMessage - Метод возвращает сообщение успеха соединения
              * */
-
             std::string getSuccessMessage();
 
-            virtual std::string getRange() = 0;
-            virtual std::string getCurrent() = 0;
-            virtual std::string setValue() = 0;
-
-            virtual std::string getPulse() = 0;
-        
         public:
             /** @brief TypeCommands Конструктор инициализации, для уменьшения строчек кода в дальнейшем
              * */
             TypeCommands( oscilloscopes::Oscilloscope *osc, const std::string& prefix,
-                          const std::string& command ) : _oscilloscope(osc), _startXOR(0), _PREFIX(prefix),
+                          const std::string& command ) : _oscilloscope(osc), _PREFIX(prefix),
                           _COMMAND(command) {}
 
             virtual std::string call( const std::string& content, const size_t& i ) = 0;

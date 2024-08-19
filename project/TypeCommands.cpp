@@ -15,12 +15,13 @@ static std::string write( const std::vector<T>& prm, const std::string& prefix, 
     {
         oss << prm[i];
         if( i != _I )
-            oss << ".";
+            oss << ",";
     }
     oss << ":xor=valXor;";
     return oss.str();
 }
 
+#if 0
 void server::typecommands::TypeCommands::clear()
 {
     if( !_param.empty() )
@@ -34,18 +35,22 @@ void server::typecommands::TypeCommands::clear()
     }
     _startXOR = 0;
 }
+#endif
 
-void server::typecommands::TypeCommands::parseContent( const std::string& content, const size_t& i,
-                                                       const size_t& end )
+std::pair<std::vector<std::string>, size_t> server::typecommands::TypeCommands::parseContent(
+        const std::string& content, const size_t& i, const size_t& end )
 {
-    clear();
+    //clear();
+    std::vector<std::string> param;
+    size_t startXOR = 0;
+
     std::string buffer = "";  // Вот тут была зарыта собака
     for( size_t j = i, pi = 0; j < content.size(); ++j )
     {
         if( ( content[j] == ',' ) || ( content[j] == ':' ) || ( content[j] == '.' ) )
         {
             ++pi;
-            _param.push_back(buffer);
+            param.push_back(buffer);
             buffer = "";
         }
         else
@@ -53,12 +58,13 @@ void server::typecommands::TypeCommands::parseContent( const std::string& conten
 
         if( pi == end )
         {
-            _startXOR = ( j + 1 );
+            startXOR = ( j + 1 );
             buffer.clear();
             break;
         }
     }
     buffer.clear();
+    return std::pair<std::vector<std::string>, size_t>( param, startXOR );
 }
 
 std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& prm,
