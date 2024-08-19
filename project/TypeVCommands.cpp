@@ -11,10 +11,10 @@ std::string server::typecommands::TypeVCommands::getRange()
     return getSuccessMessage(range);
 }
 
-std::string server::typecommands::TypeVCommands::getCurrent()
+std::string server::typecommands::TypeVCommands::getCurrent( const std::vector<std::string>& params )
 {
     int channel_number = 0;
-    try { channel_number = std::stoi( _param[0] ); }
+    try { channel_number = std::stoi( params[0] ); }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN, emsg ); };
 
     if( channel_number > _oscilloscope->getChannelsSize() )
@@ -30,10 +30,10 @@ std::string server::typecommands::TypeVCommands::getCurrent()
     return getSuccessMessage( valueV );
 }
 
-std::string server::typecommands::TypeVCommands::setValue()
+std::string server::typecommands::TypeVCommands::setValue( const std::vector<std::string>& params )
 {
     int channel_number = 0;
-    try { channel_number = std::stoi( _param[0] ); }
+    try { channel_number = std::stoi( params[0] ); }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_SET_CHANNEL_NUMBER_UNKNOWN, emsg ); };
 
     if( channel_number >= _oscilloscope->getChannelsSize() )
@@ -43,7 +43,7 @@ std::string server::typecommands::TypeVCommands::setValue()
         return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN, "IS_NULL" );
 
     int new_v_value = 0;
-    try { new_v_value = std::stoi( _param[1] ); }
+    try { new_v_value = std::stoi( params[1] ); }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_SET_UNKNOWN_NEW_LEVEL, emsg ); };
 
     try { new_v_value = _oscilloscope->setInputLevel( ( channel_number - 1 ), new_v_value ); }
@@ -56,12 +56,14 @@ std::string server::typecommands::TypeVCommands::call( const std::string& conten
 {
     try  // Это на случай, если что-то ужасное случится
     {
-        parseContent( content, i, 3 );
-        if( ( ( _param[0] == "_" ) && ( _param[1] == "_" ) ) )
+        auto params = parseContent( content, i, 3 ).first;
+        if( params.size() != 2 )
+            return getErrorMessage( "1", "" );
+        if( ( ( params[0] == "_" ) && ( params[1] == "_" ) ) )
             return getRange();
-        if( _param[1] == "?" )
-            return getCurrent();
-        return setValue();
+        if( params[1] == "?" )
+            return getCurrent( params );
+        return setValue( params );
     }
     catch( const std::exception& emsg )
     {

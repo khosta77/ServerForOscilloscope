@@ -19,10 +19,10 @@ std::string server::typecommands::TypeSCommands::getCurrent()
     return getSuccessMessage( value );
 }
 
-std::string server::typecommands::TypeSCommands::setValue()
+std::string server::typecommands::TypeSCommands::setValue( const std::vector<std::string>& params )
 {
     int new_s_value = 0;
-    try { new_s_value = std::stoi( _param[0] ); }
+    try { new_s_value = std::stoi( params[0] ); }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_SET_UNKNOWN_PARAMETR, emsg ); };
 
     try { new_s_value = _oscilloscope->setSampleRate( new_s_value ); }
@@ -34,12 +34,14 @@ std::string server::typecommands::TypeSCommands::call( const std::string& conten
 {
     try  // Это на случай, если что-то ужасное случится
     {
-        parseContent( content, i, 2 );
-        if( _param[0] == "_" )
+        auto params = parseContent( content, i, 2 ).first;
+        if( params.size() != 1 )
+            return getErrorMessage( "1", "" );
+        if( params[0] == "_" )
             return getRange();
-        if( _param[0] == "?" )
+        if( params[0] == "?" )
             return getCurrent();
-        return setValue();
+        return setValue( params );
     }
     catch( const std::exception& emsg )
     {
