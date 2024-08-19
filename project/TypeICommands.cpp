@@ -1,6 +1,6 @@
 #include "TypeICommands.h"
 
-std::string server::typecommands::TypeICommands::call( const std::string& content, const size_t& i )
+std::string server::typecommands::TypeICommands::call( const std::string& content, const size_t& i, const bool& isDualUse )
 {
     try
     {

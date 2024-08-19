@@ -52,7 +52,7 @@ std::string server::typecommands::TypeVCommands::setValue( const std::vector<std
     return getSuccessMessage( new_v_value );
 }
 
-std::string server::typecommands::TypeVCommands::call( const std::string& content, const size_t& i )
+std::string server::typecommands::TypeVCommands::call( const std::string& content, const size_t& i, const bool& isDualUse )
 {
     try
     {

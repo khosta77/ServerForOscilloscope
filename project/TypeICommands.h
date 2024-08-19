@@ -22,7 +22,7 @@ namespace server
              *  @param content - контент
              *  @param i       - номер после =
              * */
-            std::string call( const std::string& content, const size_t& i ) override;
+            std::string call( const std::string& content, const size_t& i, const bool& isDualUse = false ) override;
 
         };
 

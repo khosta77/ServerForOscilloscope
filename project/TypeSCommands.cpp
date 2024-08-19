@@ -30,7 +30,7 @@ std::string server::typecommands::TypeSCommands::setValue( const std::vector<std
     return getSuccessMessage( new_s_value );
 }
 
-std::string server::typecommands::TypeSCommands::call( const std::string& content, const size_t& i )
+std::string server::typecommands::TypeSCommands::call( const std::string& content, const size_t& i, const bool& isDualUse )
 {
     try
     {
