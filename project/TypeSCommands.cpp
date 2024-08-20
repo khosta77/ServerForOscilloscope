@@ -7,7 +7,7 @@ std::string server::typecommands::TypeSCommands::getRange()
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_RANGE_PROBLEM_GET, emsg ); };
 
     if( range.empty() )
-        return getErrorMessage( ERROR_RANGE_EMPTY, "RANGE_IS_NULL" );
+        return getErrorMessage( ERROR_RANGE_EMPTY );
     return getSuccessMessage(range);
 }
 
@@ -23,7 +23,7 @@ std::string server::typecommands::TypeSCommands::setValue( const std::vector<std
 {
     int new_s_value = 0;
     try { new_s_value = std::stoi( params[0] ); }
-    catch( const std::exception& emsg ) { return getErrorMessage( ERROR_SET_UNKNOWN_PARAMETR, emsg ); };
+    catch( ... ) { return getErrorMessage( ERROR_SET_UNKNOWN_PARAMETR ); };
 
     try { new_s_value = _oscilloscope->setSampleRate( new_s_value ); }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_SET_PROBLEM_SET, emsg ); };
@@ -32,22 +32,29 @@ std::string server::typecommands::TypeSCommands::setValue( const std::vector<std
 
 std::string server::typecommands::TypeSCommands::call( const std::string& content, const size_t& i, const bool& isDualUse )
 {
+    std::string returnMessage = "";
     try
     {
         auto params = parseContent( content, i, 2 ).first;
         if( params.size() != 1 )
-            return getErrorMessage( "1", "" );
-        if( params[0] == "_" )
-            return getRange();
-        if( params[0] == "?" )
-            return getCurrent();
-        return setValue( params );
+            returnMessage = getErrorMessage( ERROR_SAMPLE_EXTRA );
+        else if( params[0] == "_" )
+            returnMessage = getRange();
+        else if( params[0] == "?" )
+            returnMessage = getCurrent();
+        else
+            returnMessage = setValue( params );
+        params.clear();
     }
-    catch( const std::exception& emsg )
+    catch( ... )
     {
-        return getErrorMessage( "SAMPLE_EXTRA", emsg );
+        returnMessage = getErrorMessage( ERROR_SAMPLE_EXTRA );
     };
-    return getErrorUnknownMessage();
+
+    if( returnMessage.empty() )
+        returnMessage = getErrorUnknownMessage();
+    
+    return returnMessage;
 }
 
 
