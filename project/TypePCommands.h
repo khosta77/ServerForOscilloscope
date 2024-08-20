@@ -47,7 +47,10 @@ namespace server
              *            | ERROR_GET_MESSAGE_THROW - Проблема с подготовкой сообщения 
              *            + [error_name]: может быть что угодно
              * */
-            std::string getPulse( [[maybe_unused]] const std::vector<std::string>& params );
+            std::string getPulse( const std::vector<std::string>& params );
+
+            std::string pulseOperation( const std::string& content, const size_t& i );
+            std::string trigOperation( const std::string& content, const size_t& i );
 
         public:
             TypePCommands( oscilloscopes::Oscilloscope *osc, const std::string& prefix,
