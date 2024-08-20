@@ -30,23 +30,40 @@
 
 #include "oscilloscopes.h"
 
-#define ERROR_RANGE_UNKHOWN_PARAMETR "param"
-#define ERROR_RANGE_PROBLEM_GET      "-1"
-#define ERROR_RANGE_EMPTY            "fail"
+// OSCILLOSCOPE_ERROR_INVALID_PARAM 1
+// OSCILLOSCOPE_SUCCESS             0
+// OSCILLOSCOPE_ERROR_ACCESS        -3
+// OSCILLOSCOPE_ERROR_NO_DEVICE     -4
+// OSCILLOSCOPE_ERROR_TIMEOUT       -7
+// OSCILLOSCOPE_ERROR_NO_MEM        -11
+// OSCILLOSCOPE_ERROR_OTHER         -99
 
-#define ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN "ch_unknown"
-#define ERROR_CURRENT_PROBLEM_GET "throw_in_method"
-#define ERROR_CURRENT_UNKNOWN_PARAMETR "param"
+#define ERROR_RANGE_UNKHOWN_PARAMETR         "-31"
+#define ERROR_RANGE_PROBLEM_GET              "-41"
+#define ERROR_RANGE_EMPTY                    "-61"
 
-#define ERROR_SET_CHANNEL_NUMBER_UNKNOWN "fail"
-#define ERROR_SET_UNKNOWN_NEW_LEVEL "fail"
-#define ERROR_SET_PROBLEM_SET "fail"
-#define ERROR_SET_UNKNOWN_PARAMETR "fail"
+#define ERROR_CURRENT_UNKNOWN_PARAMETR       "-32"
+#define ERROR_CURRENT_PROBLEM_GET            "-42"
+#define ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN "-51"
 
-#define ERROR_GET_DELAY_UNKNOWN "parseContent"
-#define ERROR_GET_PROBLEM_GET "getSignalFrame"
-#define ERROR_GET_MESSAGE_THROW "getSuccessMessageGet"
-#define ERROR_GET_CHANNEL_NUMBER_UNKNOWN "ch_unknown"
+#define ERROR_SET_UNKNOWN_NEW_LEVEL          "-33"
+#define ERROR_SET_UNKNOWN_PARAMETR           "-34"
+#define ERROR_SET_PROBLEM_SET                "-43"
+#define ERROR_SET_CHANNEL_NUMBER_UNKNOWN     "-52"
+
+#define ERROR_GET_DELAY_UNKNOWN              "-35"
+#define ERROR_GET_PROBLEM_GET                "-44"
+#define ERROR_GET_CHANNEL_NUMBER_UNKNOWN     "-53"
+#define ERROR_GET_MESSAGE_THROW              "-62"
+
+#define ERROR_INFO_EXTRA                     "-21"
+#define ERROR_PULSE_EXTRA                    "-22"
+#define ERROR_SAMPLE_EXTRA                   "-23"
+#define ERROR_VX_EXTRA                       "-24"
+
+#define ERROR_NO_METHOD                      "-96"
+#define ERROR_UNKNOWN_MESSAGE                "-97"
+#define ERROR_UNKNOWN_COMMAND                "-98"
 
 namespace server
 {
@@ -81,7 +98,8 @@ namespace server
              *  @param err - ошибка
              * */
             std::string getErrorMessage( const std::string& prm, const std::exception& emsg );
-            std::string getErrorMessage( const std::string& prm, const std::string& emsg );
+            std::string getErrorMessage( const std::string& prm, const std::string& emsg = "" );
+            std::string getErrorMessage( const std::string& command, const int& codeError );
 
             std::string getErrorMessage();
 
