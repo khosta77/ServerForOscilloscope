@@ -2,9 +2,11 @@
 
 std::tuple<std::string, std::string, int> readArg( int argc, char* argv[] )
 {
-    //std::cout << argv[0] << ' ' << argv[1] << ' ' << argv[2] << ' ' << argv[3] << std::endl;
-    if( ( ( argc <= 1 ) || ( argc >= 5 ) ) )
-        return std::tuple<std::string, std::string, int>( "", "", 0 );
+    if( argc != 4 )
+    {
+        std::cout << "default: hant, 127.0.0.1, 34100" << std::endl;
+        return std::tuple<std::string, std::string, int>( "hant", "127.0.0.1", 34100 );
+    }
     std::string prefix = std::string( argv[1] );
     std::string ip = std::string( argv[2] );
     int port = std::stoi( std::string( argv[3] ) );

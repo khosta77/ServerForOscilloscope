@@ -6,9 +6,10 @@
 int main( int argc, char* argv[] )
 {
     oscilloscopes::hantek::Hantek6022 oscilloscope;
-   // oscilloscopes::plug::OscPlug oscilloscope;
-    server::CommandDecoder cmdec( "osc", &oscilloscope );
-    server::Server server( "127.0.0.1", 8000, &cmdec );
+    //oscilloscopes::plug::OscPlug oscilloscope;
+    auto arg = readArg( argc, argv );
+    server::CommandDecoder cmdec( std::get<0>(arg), &oscilloscope );
+    server::Server server( std::get<1>(arg), std::get<2>(arg), &cmdec );
     return server.run();
 }
 
