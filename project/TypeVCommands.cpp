@@ -17,13 +17,24 @@ std::string server::typecommands::TypeVCommands::getCurrent( const std::vector<s
     try { channel_number = std::stoi( params[0] ); }
     catch( ... ) { return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN ); };
 
-    if( ( ( channel_number > _oscilloscope->getChannelsSize() ) || ( channel_number == 0 ) ) )
+    if( ( ( channel_number > _oscilloscope->getChannelsSize() ) || ( channel_number < 0 ) ) )
         return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN );
 
+    if( channel_number == 0 )
+    {
+        std::vector<size_t> values;
+        try
+        {
+            for( size_t i = 0, I = _oscilloscope->getChannelsSize(); i < I; ++i )
+                values.push_back( _oscilloscope->getInputLevel( i ) );
+        }
+        catch( const std::exception& emsg ) { return getErrorMessage( ERROR_CURRENT_PROBLEM_GET, emsg ); };
+        return getSuccessMessage( values );
+    }
     size_t valueV = 0;
     try { valueV = _oscilloscope->getInputLevel( ( channel_number - 1 ) ); }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_CURRENT_PROBLEM_GET, emsg ); };
-
+    
     return getSuccessMessage( valueV );
 }
 
@@ -52,7 +63,7 @@ std::string server::typecommands::TypeVCommands::call( const std::string& conten
     {
         auto params = parseContent( content, i, 3 ).first;
         if( params.size() != 2 )
-            returnMessage = getErrorMessage( "1", "" );
+            returnMessage = getErrorMessage( ERROR_VX_EXTRA );
         else if( ( ( params[0] == "_" ) && ( params[1] == "_" ) ) )
             returnMessage = getRange();
         else if( params[1] == "?" )
@@ -61,9 +72,9 @@ std::string server::typecommands::TypeVCommands::call( const std::string& conten
             returnMessage = setValue( params );
         params.clear();
     }
-    catch( const std::exception& emsg )
+    catch( ... )
     {
-        returnMessage = getErrorMessage( "VX_EXTRA", emsg );
+        returnMessage = getErrorMessage( ERROR_VX_EXTRA );
     };
     if( returnMessage.empty() )
         returnMessage = getErrorUnknownMessage();
