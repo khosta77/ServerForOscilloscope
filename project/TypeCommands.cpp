@@ -67,24 +67,33 @@ void sendToSock( const int& sock, const std::string& messsage )
 std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& prm,
                                                                  const std::exception& emsg )
 {
-    return std::string( ( _PREFIX + ":" + _COMMAND + "=" + prm + ":error=" + std::string( emsg.what() )
+    return std::string( ( _PREFIX + ":" + _COMMAND + "=bad," + prm + ":error=" + std::string( emsg.what() )
                          + ":xor=valXor;" ) );
 }
 
 std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& prm,
                                                                  const std::string& emsg )
 {
-    return std::string( ( _PREFIX + ":" + _COMMAND + "=" + prm + ":error=" + emsg + ":xor=valXor;" ) );
+    if( emsg == "" )
+        return std::string( ( _PREFIX + ":" + _COMMAND + "=bad:error=" + prm + ":xor=valXor;" ) );
+    return std::string( ( _PREFIX + ":" + _COMMAND + "=bad" + prm + ":error=" + emsg + ":xor=valXor;" ) );
 }
 
 std::string server::typecommands::TypeCommands::getErrorMessage()
 {
-    return std::string( ( _PREFIX + ":" + _COMMAND + "=-98:error=NO_METHOD:xor=valXor;" ) );
+    return std::string( ( _PREFIX + ":" + _COMMAND + "=bad:error=" + ERROR_NO_METHOD + ":xor=valXor;" ) );
 }
 
 std::string server::typecommands::TypeCommands::getErrorUnknownMessage()
 {
-    return std::string( ( _PREFIX + ":" + _COMMAND + "=-99:error=UNKHOWN_COMMAND:xor=valXor;" ) );
+    return std::string( ( _PREFIX + ":" + _COMMAND + "=bad:error=" + ERROR_UNKNOWN_MESSAGE + ":xor=valXor;" ) );
+}
+
+std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& command,
+                                                                 const int& codeError )
+{
+    return std::string( ( _PREFIX + ":" + command + "=bad:error="
+                + std::to_string(codeError) + ":xor=valXor;" ) );
 }
 
 std::string server::typecommands::TypeCommands::getSuccessMessage( const size_t& prm )
