@@ -60,6 +60,7 @@
 #define ERROR_PULSE_EXTRA                    "-22"
 #define ERROR_SAMPLE_EXTRA                   "-23"
 #define ERROR_VX_EXTRA                       "-24"
+#define ERROR_TRIG_EXTRA                     "-25"
 
 #define ERROR_NO_PREFIX                      "-94"
 #define ERROR_NO_OSC                         "-95"
