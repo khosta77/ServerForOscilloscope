@@ -11,7 +11,7 @@ std::string server::CommandDecoder::callCMD( const std::string& command, const s
         return _tpc.call( content, i );
     if( ( ( command == "channels" ) || ( command == "whoami" ) ) )
         return _tic.call( command, 0 );
-    return std::string( ( _prefix + ":UNKHOWN_COMMAND;" ) );
+    return std::string( ( _prefix + ":" + command + "=bad:error=" + ERROR_UNKNOWN_COMMAND + ";" ) );
 }
 
 std::pair<bool, size_t> server::CommandDecoder::findPrefix( const std::string& content )
@@ -26,7 +26,7 @@ std::string server::CommandDecoder::decode( const std::string& content )
 {
     std::pair<bool, size_t> it = findPrefix(content);
     if( it.first )
-        return std::string( ( _prefix + ":NO_PREFIX;" ) );
+        return std::string( ( _prefix + ":?=bad:error=" + ERROR_NO_PREFIX + ";" ) );
     std::string command = "";
     for( size_t i = it.second; i < content.size(); ++i )
     {
@@ -34,7 +34,7 @@ std::string server::CommandDecoder::decode( const std::string& content )
             return callCMD( command, content, ( i + 1 ) );
         command += content[i];
     }
-    return std::string( ( _prefix + ":NO_OSC;" ) );
+    return std::string( ( _prefix + ":" + command + "=bad:error=" + ERROR_NO_OSC + ";" ) );
 }
 
 
