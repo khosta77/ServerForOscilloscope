@@ -61,6 +61,8 @@
 #define ERROR_SAMPLE_EXTRA                   "-23"
 #define ERROR_VX_EXTRA                       "-24"
 
+#define ERROR_NO_PREFIX                      "-94"
+#define ERROR_NO_OSC                         "-95"
 #define ERROR_NO_METHOD                      "-96"
 #define ERROR_UNKNOWN_MESSAGE                "-97"
 #define ERROR_UNKNOWN_COMMAND                "-98"
