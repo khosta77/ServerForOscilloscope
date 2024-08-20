@@ -15,13 +15,10 @@ std::string server::typecommands::TypeVCommands::getCurrent( const std::vector<s
 {
     int channel_number = 0;
     try { channel_number = std::stoi( params[0] ); }
-    catch( const std::exception& emsg ) { return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN, emsg ); };
+    catch( ... ) { return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN ); };
 
-    if( channel_number > _oscilloscope->getChannelsSize() )
-        return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN, "" );
-
-    if( channel_number == 0 )
-        return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN, "IS_NULL" );
+    if( ( ( channel_number > _oscilloscope->getChannelsSize() ) || ( channel_number == 0 ) ) )
+        return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN );
 
     size_t valueV = 0;
     try { valueV = _oscilloscope->getInputLevel( ( channel_number - 1 ) ); }
@@ -32,19 +29,15 @@ std::string server::typecommands::TypeVCommands::getCurrent( const std::vector<s
 
 std::string server::typecommands::TypeVCommands::setValue( const std::vector<std::string>& params )
 {
-    int channel_number = 0;
+    int channel_number = 0, new_v_value = 0;
     try { channel_number = std::stoi( params[0] ); }
-    catch( const std::exception& emsg ) { return getErrorMessage( ERROR_SET_CHANNEL_NUMBER_UNKNOWN, emsg ); };
+    catch( ... ) { return getErrorMessage( ERROR_SET_CHANNEL_NUMBER_UNKNOWN ); };
 
-    if( channel_number >= _oscilloscope->getChannelsSize() )
-        return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN, "" );
+    if( ( ( channel_number >= _oscilloscope->getChannelsSize() ) || ( channel_number == 0 ) ) )
+        return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN );
 
-    if( channel_number == 0 )
-        return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN, "IS_NULL" );
-
-    int new_v_value = 0;
     try { new_v_value = std::stoi( params[1] ); }
-    catch( const std::exception& emsg ) { return getErrorMessage( ERROR_SET_UNKNOWN_NEW_LEVEL, emsg ); };
+    catch( ... ) { return getErrorMessage( ERROR_SET_UNKNOWN_NEW_LEVEL ); };
 
     try { new_v_value = _oscilloscope->setInputLevel( ( channel_number - 1 ), new_v_value ); }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_SET_PROBLEM_SET, emsg ); };
@@ -54,22 +47,27 @@ std::string server::typecommands::TypeVCommands::setValue( const std::vector<std
 
 std::string server::typecommands::TypeVCommands::call( const std::string& content, const size_t& i, const bool& isDualUse )
 {
+    std::string returnMessage = "";
     try
     {
         auto params = parseContent( content, i, 3 ).first;
         if( params.size() != 2 )
-            return getErrorMessage( "1", "" );
-        if( ( ( params[0] == "_" ) && ( params[1] == "_" ) ) )
-            return getRange();
-        if( params[1] == "?" )
-            return getCurrent( params );
-        return setValue( params );
+            returnMessage = getErrorMessage( "1", "" );
+        else if( ( ( params[0] == "_" ) && ( params[1] == "_" ) ) )
+            returnMessage = getRange();
+        else if( params[1] == "?" )
+            returnMessage =  getCurrent( params );
+        else
+            returnMessage = setValue( params );
+        params.clear();
     }
     catch( const std::exception& emsg )
     {
-        return getErrorMessage( "VX_EXTRA", emsg );
+        returnMessage = getErrorMessage( "VX_EXTRA", emsg );
     };
-    return getErrorUnknownMessage();
+    if( returnMessage.empty() )
+        returnMessage = getErrorUnknownMessage();
+    return returnMessage;
 }
 
 
