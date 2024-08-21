@@ -5,26 +5,39 @@
 адрес в сети и **PORT**, а так же указать *префикс*:
 
 ```cpp
-int main()
+#include "../Ваш_осциллограф.h"
+#include "Server.h"
+#include "utils.h"
+
+
+int main( int argc, char* argv[] )
 {
     oscilloscopes::Ваш_осциллограф oscilloscope;
-    server::CommandDecoder cmdec( "prefix", &oscilloscope );
-    server::Server server( SERVER_ADRESS, SERVER_PORT, &cmdec );
+    auto arg = readArg( argc, argv );
+    server::CommandDecoder cmdec( std::get<0>(arg), &oscilloscope );
+    server::Server server( std::get<1>(arg), std::get<2>(arg), &cmdec );
     return server.run();
 }
 ```
 
 В качестве примера в проекте подключается осциллограф Hantek 6022BE ~eму посвещен отдельный [репозиторий](https://github.com/khosta77/HT6022_lib_cpp.git)~.
 
+## Архитектура
+
+### Архитектура декодера
+
+![](/img/d1.png)
+
+В распакованном виде
+
+![](/img/d1_big.png)
+
 ## Про тесты
 
 Написанием тестов к каждому методу/функции в проекте я не занимался. Проводил испытания вызова методов
 и проверки на отказо устойчивость.
 
-* Если не использовать заглушку, ошибок в данной ветке быть не должно. Если установить заглушку может
-быть ошибка с malloc ее природу я не установил.
-
-* Протестировано с **заглушкой** и **Hantek 6022BE** на 10.000 итерациях, на *Mac OS* и *Raspberry Pi* проблем обнаружено не было.
+* Протестировано с **Hantek 6022BE** на 10.000 итерациях, на *Mac OS* и *Raspberry Pi* проблем обнаружено не было.
 
 * Что касается кода, после запуска в нем максимальная защита через блок `try {} catch( ... ) {};` такие ошибки отлавливаются.
 
@@ -67,5 +80,5 @@ make
 5. Запуск. Для примера
 
 ```
-./main osc 192.168.1.91 8000
+./main
 ```
