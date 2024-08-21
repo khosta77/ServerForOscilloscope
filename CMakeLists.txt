@@ -17,6 +17,10 @@ else()
         OUTPUT_VARIABLE IS_THIS_RASPBERRY_PI
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+
+    # Использование pkg-config для поиска пакета libusb
+    find_package(PkgConfig REQUIRED)
+    pkg_search_module(LIBUSB REQUIRED libusb-1.0)
 endif()
 
 if(IS_THIS_RASPBERRY_PI STREQUAL "NAME=\"Raspbian GNU/Linux\"")
@@ -34,9 +38,6 @@ if(IS_THIS_RASPBERRY_PI STREQUAL "NAME=\"Raspbian GNU/Linux\"")
     set(WIRINGPI_LIBRARIES wiringPi)
 
     set(ENV{PKG_CONFIG_PATH} "/usr/lib/arm-linux-gnueabihf/pkgconfig")
-    # Использование pkg-config для поиска пакета libusb
-    find_package(PkgConfig REQUIRED)
-    pkg_search_module(LIBUSB REQUIRED libusb-1.0)
 endif()
 
 
@@ -48,7 +49,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add support for GDB
 #SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -Wall -g -ggdb")
-#SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
+SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
 
 # Добавление исполняемого файла с именем main.out
 add_executable(
@@ -73,6 +74,8 @@ add_executable(
 # Включение заголовочных файлов и библиотек libusb
 if(APPLE)
     target_link_libraries(main.out libusb-1.0.dylib)
+else()
+
 endif()
 
 if(IS_THIS_RASPBERRY_PI STREQUAL "NAME=\"Raspbian GNU/Linux\"")
