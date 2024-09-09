@@ -15,10 +15,6 @@ namespace oscilloscopes
             OscSigframe _oscSignal;
             int _CH_size;
 
-            const std::vector<size_t> _sample = { 1, 2, 3, 4, 5 };
-            const std::vector<size_t> _level = { 6, 7, 8, 9 };
-            const std::vector<size_t> _frame = { 10, 11, 12, 13 };
-
         public:
             OscPlug( const int& CH_size = 2, const size_t& SR = 10, const size_t& IL = 5 );
             ~OscPlug();
