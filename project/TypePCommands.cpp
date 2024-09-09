@@ -45,14 +45,18 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
             return getErrorMessage( ERROR_GET_CHANNEL_NUMBER_UNKNOWN );
 
         oscilloscopes::OscSignal os;
+        
         try
         {
             _oscilloscope->onTrigger();
             os = _oscilloscope->getSignalFromTrigger( _trig_CHx, _trig_level, _trig_comp );
-        } catch( const std::exception& emsg ) { return getErrorMessage( ERROR_TRIG_EXTRA, emsg ); };
+        }
+        catch( const std::exception& emsg ) { return getErrorMessage( ERROR_TRIG_EXTRA, emsg ); };
+        
         if( os._signal.empty() )
             return getErrorMessage( ERROR_TRIG_EXTRA );
-        return getSuccessMessage( os._signal );
+        
+        return getSuccessMessage( _trig_CHx, 25, os._signal );
     }
     else
     {
@@ -63,24 +67,32 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
         try { osf = _oscilloscope->getSignalFrame( newParams[1] ); }
         catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_PROBLEM_GET, emsg ); };
 
-        if( newParams[2] == 0 )
-            return getErrorMessage( ERROR_GET_CHANNEL_NUMBER_UNKNOWN, "" );  
-
         std::string returnMessage;
-        try {
-            if( newParams[2] == 0 )
-                returnMessage = getSuccessMessage( osf[( newParams[2] - 1 )]._signal );
-            else
+        try
+        {
+            if( newParams[2] != 0 )  // Если мы хотим вернуть конкретный канал
             {
-                std::vector<int8_t> vec = osf[0]._signal;  // TODO: Переделать, замиксовать
-                for( size_t i = 1; i < _oscilloscope->getChannelsSize(); ++i )
-                {
-                    for( const auto& it : osf[i]._signal )
-                        vec.push_back( it );
-                }
-                returnMessage = getSuccessMessage( vec );
+                uint8_t currentCHx = ( newParams[2] - 1 );
+                returnMessage = getSuccessMessage( currentCHx, 25, osf[currentCHx]._signal );
             }
-        } catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_MESSAGE_THROW, emsg ); };
+            else  // Если хотим вернуть все каналы
+            {
+                uint8_t CHS = _oscilloscope->getChannelsSize();
+                std::vector<int8_t> vec( ( osf[0]._signalSize * CHS ) );
+
+                for( size_t i = 0, j = 0; i <  osf[0]._signalSize; ++i )
+                {
+                    // Производим их миксование, тоесть будет так, что [V0_0.V0_1.V1_0.V1_1]
+                    for( uint8_t chx = 0; chx < CHS; ++chx )
+                    {
+                        vec[j++] = osf[chx]._signal[i];
+                    }
+                }
+
+                returnMessage = getSuccessMessage( 0, 25, vec );
+            }
+        }
+        catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_MESSAGE_THROW, emsg ); };
         return returnMessage;
     }
 }
