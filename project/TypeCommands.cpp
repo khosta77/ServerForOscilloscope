@@ -15,7 +15,7 @@ static std::string write( const std::vector<T>& prm, const std::string& prefix, 
     {
         oss << prm[i];
         if( i != _I )
-            oss << ",";
+            oss << ".";
     }
     oss << ":xor=valXor;";
     return oss.str();
@@ -115,7 +115,7 @@ std::string server::typecommands::TypeCommands::getSuccessMessage( const std::st
     {
         oss << params[i];
         if( i != _I )
-            oss << ",";
+            oss << ".";
     }
     oss << ":xor=valXor;";
     return oss.str();
@@ -126,8 +126,21 @@ std::string server::typecommands::TypeCommands::getSuccessMessage( const std::ve
     return write<size_t>( prm, _PREFIX, _COMMAND );
 }
 
-std::string server::typecommands::TypeCommands::getSuccessMessage( const std::vector<int8_t>& prm )
+std::string server::typecommands::TypeCommands::getSuccessMessage( const uint8_t& CHx, 
+        const size_t& scaleFactor, const std::vector<int8_t>& prm )
 {
+    std::ostringstream oss;
+    oss << ( _PREFIX + ":" + _COMMAND + "=" + std::to_string(CHx) + "," + std::to_string(prm.size())
+            + "," + std::to_string(scaleFactor) + "," );
+    for( size_t i = 0, _I = ( prm.size() - 1 ), I = prm.size() ; i < I ; ++i )
+    {
+        oss << prm[i];
+        if( i != _I )
+            oss << ".";
+    }
+    oss << ":xor=valXor;";
+    return oss.str();
+
     return write<int8_t>( prm, _PREFIX, _COMMAND );
 }
 
