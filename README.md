@@ -70,13 +70,13 @@ int main( int argc, char* argv[] )
 |         -53| ERROR\_GET\_CHANNEL\_NUMBER\_UNKNOWN     | |
 |         -61| ERROR\_RANGE\_EMPTY                      | |
 |         -62| ERROR\_GET\_MESSAGE\_THROW               | |
-|         -94| ERROR\_NO\_PREFIX                        | |
-|         -95| ERROR\_NO\_OSC                           | |
-|         -96| ERROR\_NO\_METHOD                        | |
-|         -97| ERROR\_UNKNOWN\_MESSAGE                  | |
-|         -98| ERROR\_UNKNOWN\_COMMAND                  | |
-|         -99| OSCILLOSCOPE\_ERROR\_OTHER               | |
-|------------|------------------------------------------|-|
+|         -94| ERROR\_NO\_PREFIX                        |Выставлен не тот префикс, условно был `osc`, а надо `hant` |
+|         -95| ERROR\_NO\_OSC                           |Не подключен осциллограф |
+|         -96| ERROR\_NO\_METHOD                        |Некорректный метод осциллографа |
+|         -97| ERROR\_UNKNOWN\_MESSAGE                  |Неизвестное сообщение, ошибка ввода команды|
+|         -98| ERROR\_UNKNOWN\_COMMAND                  |Некорретная команда была введена|
+|         -99| OSCILLOSCOPE\_ERROR\_OTHER               |Внутрення ошибка осциллографа, что могло быть неизвестно|
+
 ## Сборка
 
 1. Скопировать репозиторий сразу с подкачкой `submoduls`
