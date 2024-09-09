@@ -43,10 +43,8 @@ std::string server::typecommands::TypeVCommands::setValue( const std::vector<std
     int channel_number = 0, new_v_value = 0;
     try { channel_number = std::stoi( params[0] ); }
     catch( ... ) { return getErrorMessage( ERROR_SET_CHANNEL_NUMBER_UNKNOWN ); };
-
-    if( ( ( channel_number >= _oscilloscope->getChannelsSize() ) || ( channel_number == 0 ) ) )
+    if( ( ( channel_number > _oscilloscope->getChannelsSize() ) || ( channel_number == 0 ) ) )
         return getErrorMessage( ERROR_CURRENT_CHANNEL_NUMBER_UNKNOWN );
-
     try { new_v_value = std::stoi( params[1] ); }
     catch( ... ) { return getErrorMessage( ERROR_SET_UNKNOWN_NEW_LEVEL ); };
 
