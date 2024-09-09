@@ -41,6 +41,42 @@ int main( int argc, char* argv[] )
 
 * Что касается кода, после запуска в нем максимальная защита через блок `try {} catch( ... ) {};` такие ошибки отлавливаются.
 
+## Коды ошибки
+
+| Код ошибки | Название макроса ошибки                  | Расшифровка         |
+|------------|------------------------------------------|---------------------|
+|          1 | OSCILLOSCOPE\_ERROR\_INVALID\_PARAM      |Некорректный параметр на входе метода осциллографа|
+|          0 | OSCILLOSCOPE\_SUCCESS                    |Все отработало штатно|
+|         -3 | OSCILLOSCOPE\_ERROR\_ACCESS              |Ошибка доступа, может быть вызвана из за того, что вызов не из под`sudo`|
+|         -4 | OSCILLOSCOPE\_ERROR\_NO\_DEVICE          |Нет подключенного устройства|
+|         -7 | OSCILLOSCOPE\_ERROR\_TIMEOUT             |Ошибка времени ожидания |
+|         -11| OSCILLOSCOPE\_ERROR\_NO\_MEM             |Не выделена память |
+|         -21| ERROR\_INFO\_EXTRA                       |При запросе информации произошло что-то экстро ординарное |
+|         -22| ERROR\_PULSE\_EXTRA                      | |
+|         -23| ERROR\_SAMPLE\_EXTRA                     | |
+|         -24| ERROR\_VX\_EXTRA                         | |
+|         -25| ERROR\_TRIG\_EXTRA                       | |
+|         -31| ERROR\_RANGE\_UNKHOWN\_PARAMETR          | |
+|         -32| ERROR\_CURRENT\_UNKNOWN\_PARAMETR        | |
+|         -33| ERROR\_SET\_UNKNOWN\_NEW\_LEVEL          | |
+|         -34| ERROR\_SET\_UNKNOWN\_PARAMETR            | |
+|         -35| ERROR\_GET\_DELAY\_UNKNOWN               | |
+|         -41| ERROR\_RANGE\_PROBLEM\_GET               | |
+|         -42| ERROR\_CURRENT\_PROBLEM\_GET             | |
+|         -43| ERROR\_SET\_PROBLEM\_SET                 | |
+|         -44| ERROR\_GET\_PROBLEM\_GET                 | |
+|         -51| ERROR\_CURRENT\_CHANNEL\_NUMBER\_UNKNOWN | |
+|         -52| ERROR\_SET\_CHANNEL\_NUMBER\_UNKNOWN     | |
+|         -53| ERROR\_GET\_CHANNEL\_NUMBER\_UNKNOWN     | |
+|         -61| ERROR\_RANGE\_EMPTY                      | |
+|         -62| ERROR\_GET\_MESSAGE\_THROW               | |
+|         -94| ERROR\_NO\_PREFIX                        | |
+|         -95| ERROR\_NO\_OSC                           | |
+|         -96| ERROR\_NO\_METHOD                        | |
+|         -97| ERROR\_UNKNOWN\_MESSAGE                  | |
+|         -98| ERROR\_UNKNOWN\_COMMAND                  | |
+|         -99| OSCILLOSCOPE\_ERROR\_OTHER               | |
+|------------|------------------------------------------|-|
 ## Сборка
 
 1. Скопировать репозиторий сразу с подкачкой `submoduls`
