@@ -72,7 +72,7 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
                 returnMessage = getSuccessMessage( osf[( newParams[2] - 1 )]._signal );
             else
             {
-                std::vector<float> vec = osf[0]._signal;
+                std::vector<int8_t> vec = osf[0]._signal;  // TODO: Переделать, замиксовать
                 for( size_t i = 1; i < _oscilloscope->getChannelsSize(); ++i )
                 {
                     for( const auto& it : osf[i]._signal )
