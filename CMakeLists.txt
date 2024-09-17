@@ -75,7 +75,7 @@ add_executable(
 if(APPLE)
     target_link_libraries(main.out libusb-1.0.dylib)
 else()
-
+    target_link_libraries(main.out -lusb-1.0)
 endif()
 
 if(IS_THIS_RASPBERRY_PI STREQUAL "NAME=\"Raspbian GNU/Linux\"")
