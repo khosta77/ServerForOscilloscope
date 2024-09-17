@@ -1,6 +1,6 @@
 #include "oscilloscope_plug.h"
 
-#define ENABLE_LOGGING 0
+//#define ENABLE_LOGGING 1
 
 class Logger
 {
@@ -100,8 +100,11 @@ oscilloscopes::OscSigframe oscilloscopes::plug::OscPlug::getSignalFrame( const s
         if( !_oscSignal[i]._signal.empty() )
             _oscSignal[i]._signal.clear();
 
+        _oscSignal[i]._signal.resize(0);
+        _oscSignal[i]._signal.resize( FS, 0 );
+
         for( size_t j = 0; j < FS; ++j ) 
-            _oscSignal[i]._signal.push_back( generateRandomInt8() );
+            _oscSignal[i]._signal[j] = static_cast<int8_t>(j);
 
         _oscSignal[i]._signalSize = FS;
     }

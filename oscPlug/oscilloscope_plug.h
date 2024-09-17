@@ -1,7 +1,7 @@
 #ifndef OSCILLOSCOPE_PLUG_H_
 #define OSCILLOSCOPE_PLUG_H_
 
-#include "oscilloscopes.h"
+#include "../project/oscilloscopes.h"
 
 namespace oscilloscopes
 {
