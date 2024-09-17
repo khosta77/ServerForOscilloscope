@@ -13,7 +13,7 @@ static std::string write( const std::vector<T>& prm, const std::string& prefix, 
     oss << ( prefix + ":" + command + "=" );
     for( size_t i = 0, _I = ( prm.size() - 1 ), I = prm.size() ; i < I ; ++i )
     {
-        oss << prm[i];
+        oss << prm[i];  // Не стабильный результат
         if( i != _I )
             oss << ".";
     }
@@ -49,21 +49,6 @@ std::pair<std::vector<std::string>, size_t> server::typecommands::TypeCommands::
     return std::pair<std::vector<std::string>, size_t>( param, startXOR );
 }
 
-void sendToSock( const int& sock, const std::string& messsage )
-{
-    const char* dataPtr = messsage.c_str();
-    size_t dataSize = messsage.length();
-    size_t totalSent = 0;
-    while( totalSent < dataSize )
-    {
-        int bytesSent = send( sock, ( dataPtr + totalSent ), ( dataSize - totalSent ), 0 );
-        if( bytesSent == -1 )
-            break;
-        totalSent += bytesSent;
-    }
-}
-
-
 std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& prm,
                                                                  const std::exception& emsg )
 {
@@ -71,8 +56,7 @@ std::string server::typecommands::TypeCommands::getErrorMessage( const std::stri
                          + ":xor=valXor;" ) );
 }
 
-std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& prm,
-                                                                 const std::string& emsg )
+std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& prm, const std::string& emsg )
 {
     if( emsg == "" )
         return std::string( ( _PREFIX + ":" + _COMMAND + "=bad:error=" + prm + ":xor=valXor;" ) );
@@ -92,8 +76,8 @@ std::string server::typecommands::TypeCommands::getErrorUnknownMessage()
 std::string server::typecommands::TypeCommands::getErrorMessage( const std::string& command,
                                                                  const int& codeError )
 {
-    return std::string( ( _PREFIX + ":" + command + "=bad:error="
-                + std::to_string(codeError) + ":xor=valXor;" ) );
+    return std::string( ( _PREFIX + ":" + command + "=bad:error=" + std::to_string(codeError)
+                        + ":xor=valXor;" ) );
 }
 
 std::string server::typecommands::TypeCommands::getSuccessMessage( const size_t& prm )
@@ -112,11 +96,7 @@ std::string server::typecommands::TypeCommands::getSuccessMessage( const std::st
     std::ostringstream oss;
     oss << ( _PREFIX + ":" + command + "=ok," );
     for( size_t i = 0, _I = ( params.size() - 1 ), I = params.size() ; i < I ; ++i )
-    {
-        oss << params[i];
-        if( i != _I )
-            oss << ".";
-    }
+        oss << params[i] << ( ( i != _I ) ? "," : "" );
     oss << ":xor=valXor;";
     return oss.str();
 }
@@ -126,22 +106,16 @@ std::string server::typecommands::TypeCommands::getSuccessMessage( const std::ve
     return write<size_t>( prm, _PREFIX, _COMMAND );
 }
 
-std::string server::typecommands::TypeCommands::getSuccessMessage( const uint8_t& CHx, 
+std::string server::typecommands::TypeCommands::getSuccessMessage( const uint8_t& CHx,
         const size_t& scaleFactor, const std::vector<int8_t>& prm )
 {
     std::ostringstream oss;
     oss << ( _PREFIX + ":" + _COMMAND + "=" + std::to_string(CHx) + "," + std::to_string(prm.size())
             + "," + std::to_string(scaleFactor) + "," );
     for( size_t i = 0, _I = ( prm.size() - 1 ), I = prm.size() ; i < I ; ++i )
-    {
-        oss << prm[i];
-        if( i != _I )
-            oss << ".";
-    }
+        oss << ((int)prm[i]) << ( ( i != _I) ? "," : "" );
     oss << ":xor=valXor;";
     return oss.str();
-
-    return write<int8_t>( prm, _PREFIX, _COMMAND );
 }
 
 std::string server::typecommands::TypeCommands::getSuccessMessage()
