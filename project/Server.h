@@ -95,6 +95,9 @@ namespace server
             while( totalSent < dataSize )
             {
                 int bytesSent = send( s, ( dataPtr + totalSent ), ( dataSize - totalSent ), 0 );
+                //for( size_t i = 0; i < ( dataSize - totalSent ); ++i )
+                    //std::cout << (*( dataPtr + i ));
+                //std::cout << std::endl;
                 if( bytesSent == -1 )
                     break;
                 totalSent += bytesSent;
@@ -120,7 +123,7 @@ namespace server
                 throw ServerException( ( "select " + std::to_string(sel) ) );
             else if( sel == 0 )
             {
-                std::cout << "select return 0" << std::endl;
+                //std::cout << "select return 0" << std::endl;
                 if( !_threadPool.empty() )
                     _threadPool.clear();
             }
@@ -241,47 +244,6 @@ namespace server
             return 0;
         }
 
-#if 0
-        int sock;
-        int listener;
-        struct sockaddr_in addr;
-        CommandDecoder *_cmdec;
-
-        /** @brief socketInit - инициализация сокета
-         * */
-        void socketInit();
-
-        /** @brief fillAddress - введение адреса
-         * */
-        void fillAddress( const std::string& IP, const int& PORT );
-
-        /** @brief bindInit - инициализация bind
-         * */
-        void bindInit();
-
-        /** @brief sockAccept - подверждение сокета
-         * */
-        void sockAccept( int& sock );
-
-        /** @breif readFromRecv - считывание данных с сокета
-         * */
-        std::string readFromRecv();
-
-        /** @brief sendToSock - отправить данные в сокет
-         * */
-        void sendToSock( const std::string& msg );
-
-        /** @brief process процесс считывания/записи
-         * */
-        bool process();
-
-    public:
-        Server( const std::string& IP, const int& PORT, CommandDecoder* cmdec );
-        
-        /** @brief run - запуск сервера
-         * */
-        int run();
-#endif
     };  // Server
 
 };  // server
