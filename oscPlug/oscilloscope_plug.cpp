@@ -104,7 +104,7 @@ oscilloscopes::OscSigframe oscilloscopes::plug::OscPlug::getSignalFrame( const s
         _oscSignal[i]._signal.resize( FS, 0 );
 
         for( size_t j = 0; j < FS; ++j ) 
-            _oscSignal[i]._signal[j] = static_cast<int8_t>(j);
+            _oscSignal[i]._signal[j] = static_cast<int>(j);
 
         _oscSignal[i]._signalSize = FS;
     }
