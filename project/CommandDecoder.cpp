@@ -9,6 +9,8 @@ std::string server::CommandDecoder::callCMD( const std::string& command, const s
         return _tsc.call( content, i );
     if( command == "pulse" )
         return _tpc.call( content, i );
+    if( command == "trig" )
+        return _tpc.trigOperation( content, i );
     if( ( ( command == "channels" ) || ( command == "whoami" ) ) )
         return _tic.call( command, 0 );
     return std::string( ( _prefix + ":" + command + "=bad:error=" + ERROR_UNKNOWN_COMMAND + ";" ) );
