@@ -12,11 +12,7 @@ static std::string write( const std::vector<T>& prm, const std::string& prefix, 
     std::ostringstream oss;
     oss << ( prefix + ":" + command + "=" );
     for( size_t i = 0, _I = ( prm.size() - 1 ), I = prm.size() ; i < I ; ++i )
-    {
-        oss << prm[i];  // Не стабильный результат
-        if( i != _I )
-            oss << ".";
-    }
+        oss << prm[i] << ( ( i != _I ) ? "," : "" );  // Не стабильный результат
     oss << ":xor=valXor;";
     return oss.str();
 }
@@ -107,7 +103,7 @@ std::string server::typecommands::TypeCommands::getSuccessMessage( const std::ve
 }
 
 std::string server::typecommands::TypeCommands::getSuccessMessage( const uint8_t& CHx,
-        const size_t& scaleFactor, const std::vector<int8_t>& prm )
+        const size_t& scaleFactor, const std::vector<int>& prm )
 {
     std::ostringstream oss;
     oss << ( _PREFIX + ":" + _COMMAND + "=" + std::to_string(CHx) + "," + std::to_string(prm.size())
