@@ -87,7 +87,7 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
         if( newParams[2] != 0 )  // Если мы хотим вернуть конкретный канал
         {
             uint8_t currentCHx = ( newParams[2] - 1 );
-            std::cout << ((int)currentCHx) << ' ' << osf[currentCHx]._signal.size() << std::endl;
+            //std::cout << ((int)currentCHx) << ' ' << osf[currentCHx]._signal.size() << std::endl;
             returnMessage = getSuccessMessage( currentCHx, 25, osf[currentCHx]._signal );
         }
         else  // Если хотим вернуть все каналы
