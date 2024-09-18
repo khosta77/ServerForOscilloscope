@@ -60,19 +60,24 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
     }
     
     // Обработка моментально/с задержкой считывания
-    if( newParams[0] > 0 )
+    if( newParams[0] > 0 )  // Задержка
         std::this_thread::sleep_for(std::chrono::milliseconds(newParams[0]));
 
     oscilloscopes::OscSigframe osf;
-    //std::cout << "Размер: " << newParams[1] << std::endl;
     try
     {
         osf = _oscilloscope->getSignalFrame( newParams[1] );
+        //std::cout << "==========================================" << std::endl;
         for( auto it = osf.begin(); it != osf.end(); ++it )
         {
             if( it->second._signal.size() != newParams[1] )
                 it->second._signal.resize(newParams[1]);
+            //for( const auto& elem : it->second._signal )
+            //    std::cout << elem << ' ';
+            //std::cout << std::endl;
+            //std::cout << "--------------------------------------" << std::endl;
         }
+        //std::cout << "==========================================" << std::endl;
     }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_PROBLEM_GET, emsg ); };
 
@@ -82,7 +87,7 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
         if( newParams[2] != 0 )  // Если мы хотим вернуть конкретный канал
         {
             uint8_t currentCHx = ( newParams[2] - 1 );
-            //std::cout << ((int)currentCHx) << ' ' << osf[currentCHx]._signal.size() << std::endl;
+            std::cout << ((int)currentCHx) << ' ' << osf[currentCHx]._signal.size() << std::endl;
             returnMessage = getSuccessMessage( currentCHx, 25, osf[currentCHx]._signal );
         }
         else  // Если хотим вернуть все каналы
