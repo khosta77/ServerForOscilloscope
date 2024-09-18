@@ -115,7 +115,7 @@ oscilloscopes::OscSigframe oscilloscopes::plug::OscPlug::getSignalFrame( const s
 const std::vector<size_t> oscilloscopes::plug::OscPlug::getRangeSignalFrame() const { return _frame; }
 
 oscilloscopes::OscSignal oscilloscopes::plug::OscPlug::getSignalFromTrigger( const uint8_t& i,
-        const float& level, const uint8_t& comp )
+        const int& level, const int& comp )
 {
     if( !_oscSignal[i]._signal.empty() )
         _oscSignal[i]._signal.clear();
