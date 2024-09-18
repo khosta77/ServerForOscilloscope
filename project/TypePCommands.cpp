@@ -36,16 +36,21 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
     catch( ... ) { return getErrorMessage( ERROR_GET_DELAY_UNKNOWN ); };
 
     if( newParams[2] > _oscilloscope->getChannelsSize() )
+    {
+        //std::cout << "Глобальная не состыковка: " << newParams[2]  << "!=" << _oscilloscope->getChannelsSize() << std::endl;
         return getErrorMessage( ERROR_GET_CHANNEL_NUMBER_UNKNOWN );
-
+    }
 
     if( newParams[0] <= -1 )  // Срабатывание по триггеру
     {
         if( newParams[2] != _trig_CHx )
+        {
+            //std::cout << "Произошло в триггере: " << ((int)newParams[2]) << "!=" << _trig_CHx << std::endl;
             return getErrorMessage( ERROR_GET_CHANNEL_NUMBER_UNKNOWN );
-
+        }
         oscilloscopes::OscSignal os;
-        
+        //std::cout << ((int)_trig_CHx) << ' ' << (_trig_level) << ' ' << ((int)_trig_comp) << std::endl;
+
         try
         {
             _oscilloscope->onTrigger();
@@ -116,7 +121,10 @@ std::string server::typecommands::TypePCommands::pulseOperation( const std::stri
     {
         auto params = parseContent( content, i, 4 ).first;
         if( params.size() != 3 )
+        {
+            std::cout << content << std::endl;
             message = getErrorMessage( ERROR_TRIG_EXTRA );
+        }
         else if( ( ( params[0] == "_" ) && ( params[1] == "_" ) && ( params[2] == "_" ) ) )
             message = getRange();
         else
@@ -137,14 +145,15 @@ std::string server::typecommands::TypePCommands::trigOperation( const std::strin
     {
         auto params = parseContent( content, i, 4 ).first;
         if( params.size() != 3 )
-            return getErrorMessage( ERROR_TRIG_EXTRA, "trig_param_error" );
+            return getErrorMessage( ERROR_TRIG_EXTRA, ( "(" + content + ")") );
         std::vector<int> newParams;
         try
         {
             _oscilloscope->offTrigger();
-            _trig_CHx = stot<uint8_t>( params[0] );
-            _trig_level = stot<float>( params[1] );
-            _trig_comp = stot<uint8_t>( params[2] );
+            _trig_CHx = std::stoi( params[0] );
+            _trig_level = std::stoi( params[1] );
+            _trig_comp = std::stoi( params[2] );
+            //std::cout << _trig_CHx << ' ' << _trig_level << ' ' << _trig_comp << std::endl;
         }
         catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_DELAY_UNKNOWN, emsg ); }
         message = getSuccessMessage( "trig", params );

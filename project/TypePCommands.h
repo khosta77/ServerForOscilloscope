@@ -12,9 +12,9 @@ namespace server
         class TypePCommands final : public TypeCommands
         {
         private:
-            uint8_t _trig_CHx;
-            float   _trig_level;
-            uint8_t _trig_comp;
+            int _trig_CHx;
+            int _trig_level;
+            int _trig_comp;
  
             /** @brief getRange - Метод получения размера для команд типа V, пример:
              *                    * [prefix]:pulse=[delay],[points],[channel]:xor=valXor;
@@ -50,6 +50,9 @@ namespace server
             std::string getPulse( const std::vector<std::string>& params );
 
             std::string pulseOperation( const std::string& content, const size_t& i );
+        public:
+            /** @brief вывзывается отдельно
+             * */
             std::string trigOperation( const std::string& content, const size_t& i );
 
         public:
