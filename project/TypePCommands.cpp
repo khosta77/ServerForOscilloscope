@@ -39,7 +39,7 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
         return getErrorMessage( ERROR_GET_CHANNEL_NUMBER_UNKNOWN );
 
 
-    if( newParams[0] <= -1 )
+    if( newParams[0] <= -1 )  // Срабатывание по триггеру
     {
         if( newParams[2] != _trig_CHx )
             return getErrorMessage( ERROR_GET_CHANNEL_NUMBER_UNKNOWN );
@@ -58,54 +58,50 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
         
         return getSuccessMessage( _trig_CHx, 25, os._signal );
     }
-    else
+    
+    // Обработка моментально/с задержкой считывания
+    if( newParams[0] > 0 )
+        std::this_thread::sleep_for(std::chrono::milliseconds(newParams[0]));
+
+    oscilloscopes::OscSigframe osf;
+    //std::cout << "Размер: " << newParams[1] << std::endl;
+    try
     {
-        if( newParams[0] > 0 )
-            std::this_thread::sleep_for(std::chrono::milliseconds(newParams[0]));
-
-        oscilloscopes::OscSigframe osf;
-        //std::cout << "Размер: " << newParams[1] << std::endl;
-        try
+        osf = _oscilloscope->getSignalFrame( newParams[1] );
+        for( auto it = osf.begin(); it != osf.end(); ++it )
         {
-            osf = _oscilloscope->getSignalFrame( newParams[1] );
-            for( auto it = osf.begin(); it != osf.end(); ++it )
-            {
-                if( it->second._signal.size() != newParams[1] )
-                    it->second._signal.resize(newParams[1]);
-            }
-
+            if( it->second._signal.size() != newParams[1] )
+                it->second._signal.resize(newParams[1]);
         }
-        catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_PROBLEM_GET, emsg ); };
-
-        std::string returnMessage;
-        try
-        {
-            if( newParams[2] != 0 )  // Если мы хотим вернуть конкретный канал
-            {
-                uint8_t currentCHx = ( newParams[2] - 1 );
-                //std::cout << ((int)currentCHx) << ' ' << osf[currentCHx]._signal.size() << std::endl;
-                returnMessage = getSuccessMessage( currentCHx, 25, osf[currentCHx]._signal );
-            }
-            else  // Если хотим вернуть все каналы
-            {
-                uint8_t CHS = _oscilloscope->getChannelsSize();
-                std::vector<int8_t> vec( ( osf[0]._signalSize * CHS ) );
-
-                for( size_t i = 0, j = 0; i <  osf[0]._signalSize; ++i )
-                {
-                    // Производим их миксование, тоесть будет так, что [V0_0.V0_1.V1_0.V1_1]
-                    for( uint8_t chx = 0; chx < CHS; ++chx )
-                    {
-                        vec[j++] = osf[chx]._signal[i];
-                    }
-                }
-
-                returnMessage = getSuccessMessage( 0, 25, vec );
-            }
-        }
-        catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_MESSAGE_THROW, emsg ); };
-        return returnMessage;
     }
+    catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_PROBLEM_GET, emsg ); };
+
+    std::string returnMessage;
+    try
+    {
+        if( newParams[2] != 0 )  // Если мы хотим вернуть конкретный канал
+        {
+            uint8_t currentCHx = ( newParams[2] - 1 );
+            //std::cout << ((int)currentCHx) << ' ' << osf[currentCHx]._signal.size() << std::endl;
+            returnMessage = getSuccessMessage( currentCHx, 25, osf[currentCHx]._signal );
+        }
+        else  // Если хотим вернуть все каналы
+        {
+            uint8_t CHS = _oscilloscope->getChannelsSize();
+            std::vector<int> vec( ( osf[0]._signalSize * CHS ) );
+            for( size_t i = 0, j = 0; i <  osf[0]._signalSize; ++i )
+            {
+                // Производим их миксование, тоесть будет так, что [V0_0.V0_1.V1_0.V1_1]
+                for( uint8_t chx = 0; chx < CHS; ++chx )
+                {
+                    vec[j++] = osf[chx]._signal[i];
+                }
+            }
+            returnMessage = getSuccessMessage( 0, 25, vec );
+        }
+    }
+    catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_MESSAGE_THROW, emsg ); };
+    return returnMessage;
 }
 
 std::string server::typecommands::TypePCommands::pulseOperation( const std::string& content, const size_t& i )
