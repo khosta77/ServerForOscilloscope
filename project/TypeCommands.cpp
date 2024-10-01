@@ -17,6 +17,19 @@ static std::string write( const std::vector<T>& prm, const std::string& prefix, 
     return oss.str();
 }
 
+template<typename T1, typename T2 = int>
+static std::string writeV2( const std::string& prefix, const std::string& command,
+                            const std::vector<T1>& prm, const std::vector<T2>& subprm = std::vector<T2>(0) )
+{
+    std::ostringstream oss;
+    oss << ( prefix + ":" + command + "=" );
+    for( size_t i = 0, _I = ( prm.size() - 1 ), I = prm.size() ; i < I ; ++i )
+        oss << prm[i] << ( ( i != _I ) ? "," : "" );  // Не стабильный результат
+    oss << ":xor=valXor;";
+    return oss.str();
+
+}
+
 std::pair<std::vector<std::string>, size_t> server::typecommands::TypeCommands::parseContent(
         const std::string& content, const size_t& i, const size_t& end )
 {

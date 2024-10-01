@@ -1,22 +1,9 @@
 #include "TypePCommands.h"
 
-static std::vector<int> paramsToSizeT( const std::vector<std::string>& params )
+static inline std::vector<int> paramsToSizeT( const std::vector<std::string>& params )
 {
     return std::vector<int>{ std::stoi( params[0] ), std::stoi( params[1] ), std::stoi( params[2]) };
 }
-
-/** @brief stos - string to typename
- *  @param str - string
- * */
-template<typename T>
-static T stot( const std::string& str )
-{
-    T tmp;
-    std::stringstream sstream(str);
-    sstream >> tmp;
-    return tmp;
-}
-
 
 std::string server::typecommands::TypePCommands::getRange()
 {
@@ -37,7 +24,6 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
 
     if( newParams[2] > _oscilloscope->getChannelsSize() )
     {
-        //std::cout << "Глобальная не состыковка: " << newParams[2]  << "!=" << _oscilloscope->getChannelsSize() << std::endl;
         return getErrorMessage( ERROR_GET_CHANNEL_NUMBER_UNKNOWN );
     }
 
@@ -45,11 +31,10 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
     {
         if( newParams[2] != _trig_CHx )
         {
-            //std::cout << "Произошло в триггере: " << ((int)newParams[2]) << "!=" << _trig_CHx << std::endl;
             return getErrorMessage( ERROR_GET_CHANNEL_NUMBER_UNKNOWN );
         }
+
         oscilloscopes::OscSignal os;
-        //std::cout << ((int)_trig_CHx) << ' ' << (_trig_level) << ' ' << ((int)_trig_comp) << std::endl;
 
         try
         {
@@ -72,17 +57,11 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
     try
     {
         osf = _oscilloscope->getSignalFrame( newParams[1] );
-        //std::cout << "==========================================" << std::endl;
         for( auto it = osf.begin(); it != osf.end(); ++it )
         {
             if( it->second._signal.size() != newParams[1] )
                 it->second._signal.resize(newParams[1]);
-            //for( const auto& elem : it->second._signal )
-            //    std::cout << elem << ' ';
-            //std::cout << std::endl;
-            //std::cout << "--------------------------------------" << std::endl;
         }
-        //std::cout << "==========================================" << std::endl;
     }
     catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_PROBLEM_GET, emsg ); };
 
@@ -92,7 +71,6 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
         if( newParams[2] != 0 )  // Если мы хотим вернуть конкретный канал
         {
             uint8_t currentCHx = ( newParams[2] - 1 );
-            //std::cout << ((int)currentCHx) << ' ' << osf[currentCHx]._signal.size() << std::endl;
             returnMessage = getSuccessMessage( currentCHx, 25, osf[currentCHx]._signal );
         }
         else  // Если хотим вернуть все каналы
@@ -101,7 +79,7 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
             std::vector<int> vec( ( osf[0]._signalSize * CHS ) );
             for( size_t i = 0, j = 0; i <  osf[0]._signalSize; ++i )
             {
-                // Производим их миксование, тоесть будет так, что [V0_0.V0_1.V1_0.V1_1]
+                // Производим их миксование, тоесть будет так, что [V0_0,V0_1,V1_0,V1_1]
                 for( uint8_t chx = 0; chx < CHS; ++chx )
                 {
                     vec[j++] = osf[chx]._signal[i];
@@ -153,7 +131,6 @@ std::string server::typecommands::TypePCommands::trigOperation( const std::strin
             _trig_CHx = std::stoi( params[0] );
             _trig_level = std::stoi( params[1] );
             _trig_comp = std::stoi( params[2] );
-            //std::cout << _trig_CHx << ' ' << _trig_level << ' ' << _trig_comp << std::endl;
         }
         catch( const std::exception& emsg ) { return getErrorMessage( ERROR_GET_DELAY_UNKNOWN, emsg ); }
         message = getSuccessMessage( "trig", params );

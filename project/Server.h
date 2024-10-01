@@ -95,9 +95,6 @@ namespace server
             while( totalSent < dataSize )
             {
                 int bytesSent = send( s, ( dataPtr + totalSent ), ( dataSize - totalSent ), 0 );
-                //for( size_t i = 0; i < ( dataSize - totalSent ); ++i )
-                    //std::cout << (*( dataPtr + i ));
-                //std::cout << std::endl;
                 if( bytesSent == -1 )
                     break;
                 totalSent += bytesSent;
@@ -123,7 +120,6 @@ namespace server
                 throw ServerException( ( "select " + std::to_string(sel) ) );
             else if( sel == 0 )
             {
-                //std::cout << "select return 0" << std::endl;
                 if( !_threadPool.empty() )
                     _threadPool.clear();
             }
