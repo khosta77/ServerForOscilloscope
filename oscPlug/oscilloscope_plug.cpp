@@ -115,15 +115,15 @@ oscilloscopes::OscSigframe oscilloscopes::plug::OscPlug::getSignalFrame( const s
 const std::vector<size_t> oscilloscopes::plug::OscPlug::getRangeSignalFrame() const { return _frame; }
 
 oscilloscopes::OscSignal oscilloscopes::plug::OscPlug::getSignalFromTrigger( const uint8_t& i,
-        const int& level, const int& comp )
+        const int& level, const int& comp, const size_t& SIZE )
 {
     if( !_oscSignal[i]._signal.empty() )
         _oscSignal[i]._signal.clear();
 
-    for( size_t j = 0; j < 10000; ++j ) 
+    for( size_t j = 0; j < SIZE; ++j ) 
         _oscSignal[i]._signal.push_back( generateRandomInt8() );
 
-    _oscSignal[i]._signalSize = 10000;
+    _oscSignal[i]._signalSize = SIZE;
     return _oscSignal[i];
 }
 

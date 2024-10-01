@@ -33,7 +33,7 @@ namespace oscilloscopes
             OscSigframe getSignalFrame( const size_t& FS ) override;
             const std::vector<size_t> getRangeSignalFrame() const override;
 
-            OscSignal getSignalFromTrigger( const uint8_t&, const int&, const int& ) override;
+            OscSignal getSignalFromTrigger( const uint8_t&, const int&, const int&, const size_t& ) override;
             const void onTrigger() override;
             const void offTrigger() override;
 
