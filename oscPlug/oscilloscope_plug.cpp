@@ -114,6 +114,7 @@ oscilloscopes::OscSigframe oscilloscopes::plug::OscPlug::getSignalFrame( const s
 
 const std::vector<size_t> oscilloscopes::plug::OscPlug::getRangeSignalFrame() const { return _frame; }
 
+#if 0
 oscilloscopes::OscSignal oscilloscopes::plug::OscPlug::getSignalFromTrigger( const uint8_t& i,
         const int& level, const int& comp, const size_t& SIZE )
 {
@@ -126,7 +127,7 @@ oscilloscopes::OscSignal oscilloscopes::plug::OscPlug::getSignalFromTrigger( con
     _oscSignal[i]._signalSize = SIZE;
     return _oscSignal[i];
 }
-
+#endif
 const void oscilloscopes::plug::OscPlug::onTrigger() { return; }
 const void oscilloscopes::plug::OscPlug::offTrigger() { return; }
 
