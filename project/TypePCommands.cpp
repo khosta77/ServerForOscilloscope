@@ -39,7 +39,13 @@ std::string server::typecommands::TypePCommands::getPulse( const std::vector<std
         try
         {
             _oscilloscope->onTrigger();
-            os = _oscilloscope->getSignalFromTrigger( _trig_CHx, _trig_level, _trig_comp, newParams[1] );
+            std::thread trigThread( &oscilloscopes::Oscilloscope::getSignalFromTrigger, _oscilloscope, _trig_CHx,
+                                    _trig_level, _trig_comp, newParams[1] );
+            os = _oscilloscope->getLastSignalFromTrigger();
+            _oscilloscope->offTrigger();
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            trigThread.join();
+            _oscilloscope->clearDeq();
         }
         catch( const std::exception& emsg ) { return getErrorMessage( ERROR_TRIG_EXTRA, emsg ); };
         
